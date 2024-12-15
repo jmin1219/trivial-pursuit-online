@@ -16,22 +16,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fetchAvailableColors } from "@/services/api/gamesApi";
+import { fetchGameData } from "@/services/api/homeApi";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COLORS } from "../../../../shared/constants/colors";
 
 export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
   const [availableColors, setAvailableColors] = useState(Object.keys(COLORS));
   const [playerName, setPlayerName] = useState("");
+  const [existingPlayerNames, setExistingPlayerNames] = useState([]);
   const [playerColor, setPlayerColor] = useState("");
 
-  if (mode === "join") {
-    const response = fetchAvailableColors(gameId);
-    setAvailableColors(["red", "blue", "green", "yellow"]);
-  }
+  useEffect(() => {
+    const fetchColorsAndNames = async () => {
+      if (mode === "join") {
+        try {
+          const response = await fetchGameData(gameId);
+          const usedColors = response.players.map((player) => player.color);
+          const usedNames = response.players.map((player) => player.name);
+          setAvailableColors(
+            Object.keys(COLORS).filter((color) => !usedColors.includes(color))
+          );
+          setExistingPlayerNames(usedNames);
+        } catch (error) {
+          console.error(`Error fetching available colors: ${error.message}`);
+        }
+      }
+    };
+    fetchColorsAndNames();
+  }, [mode, gameId]);
 
   const handleSubmit = () => {
+    if (!playerName || !playerColor) {
+      alert("Please fill out all fields.");
+      return;
+    }
+    if (existingPlayerNames.includes(playerName)) {
+      alert("Player name already exists. Please choose another name.");
+      return
+    }
     onSubmit({ playerName, playerColor, gameId });
   };
   return (
@@ -42,6 +65,7 @@ export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
           <CardDescription>Select a player name and color.</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* TODO: Make these inputs required and check for duplicate player names in game. */}
           <form className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1">
               <Label className="text-md">Player Name</Label>
@@ -50,11 +74,12 @@ export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
                 placeholder="Enter your player name"
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
+                required
               />
             </div>
             <div className="flex flex-col space-y-1">
               <Label className="text-md">Player Color</Label>
-              <Select onValueChange={setPlayerColor}>
+              <Select onValueChange={setPlayerColor} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select an available color" />
                 </SelectTrigger>

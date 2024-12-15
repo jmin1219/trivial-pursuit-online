@@ -5,7 +5,7 @@ import Home from "./home/Home";
 import GameLobby from "./in-game/GameLobby";
 import Header from "./partials/Header";
 
-const socket = io("http://localhost:3001");
+export const socket = io("http://localhost:3001");
 
 function App() {
   return (

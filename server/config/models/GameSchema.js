@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const playerSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   color: {
     type: String,
     required: true,
@@ -25,11 +30,12 @@ const gameSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  players: {
-    type: Map,
-    of: playerSchema,
-    default: {},
-  },
+  players: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Player",
+    },
+  ],
   turnOrder: {
     type: [String], // Array of player names in random order
     default: [],
