@@ -1,0 +1,107 @@
+.board-container {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  height: 100%;
+  width: 100%;
+}
+
+.space:hover rect,
+.space:hover image,
+.space:hover polygon,
+.space:hover text {
+  stroke-width: 2px;
+  stroke: #002f58;
+}
+
+.space {
+  z-index: 2;
+}
+
+
+
+/* SPACE COLORS */
+#W4,
+#O5,
+#O6,
+#O14,
+#O33,
+#S5-0,
+#S3-1,
+#S2-2,
+#S1-4,
+#S0-3 {
+  fill: #FF1493;
+}
+
+#W1,
+#O24,
+#O23,
+#O15,
+#O32,
+#S0-1,
+#S2-0,
+#S3-3,
+#S4-4,
+#S5-2 {
+  fill: #1E90FF;
+}
+
+#W3,
+#O35,
+#O0,
+#O27,
+#O8,
+#S0-4,
+#S1-2,
+#S2-1,
+#S4-0,
+#S5-3 {
+  fill: #FFFF00;
+}
+
+#W0,
+#O18,
+#O17,
+#O26,
+#O9,
+#S1-0,
+#S2-3,
+#S3-4,
+#S4-2,
+#S5-1 {
+  fill: #800080;
+}
+
+#W5,
+#O11,
+#O12,
+#O20,
+#O3,
+#S0-0,
+#S1-3,
+#S2-4,
+#S3-2,
+#S4-1 {
+  fill: #32CD32;
+}
+
+#W2,
+#O30,
+#O29,
+#O21,
+#O2,
+#S0-2,
+#S1-1,
+#S3-0,
+#S4-3,
+#S5-4 {
+  fill: #FFA500;
+}

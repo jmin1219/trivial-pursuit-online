@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fetchGameData } from "@/services/api/homeApi";
+import { apiFetchGameData } from "@/services/api/homeApi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { COLORS } from "../../../../shared/constants/colors";
@@ -31,7 +31,7 @@ export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
     const fetchColorsAndNames = async () => {
       if (mode === "join") {
         try {
-          const response = await fetchGameData(gameId);
+          const response = await apiFetchGameData(gameId);
           const usedColors = response.players.map((player) => player.color);
           const usedNames = response.players.map((player) => player.name);
           setAvailableColors(
@@ -53,7 +53,7 @@ export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
     }
     if (existingPlayerNames.includes(playerName)) {
       alert("Player name already exists. Please choose another name.");
-      return
+      return;
     }
     onSubmit({ playerName, playerColor, gameId });
   };

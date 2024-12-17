@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { apiFetchAvailableGames } from "@/services/api/homeApi";
 import {
-  createGame,
-  fetchAvailableGames,
-  joinGame,
-} from "@/services/api/homeApi";
+  initializeSocket,
+  socketCreateGame,
+  socketJoinGame,
+} from "@/services/sockets/gamesSocket";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
@@ -18,14 +19,13 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    try {
-      fetchAvailableGames().then((games) => {
-        setGames(games);
-      });
-    } catch (error) {
-      console.error(`Error fetching available games: ${error}`);
-    }
-  }, [games]);
+    const fetchGames = async () => {
+      const availableGames = await apiFetchAvailableGames();
+      setGames(availableGames);
+    };
+    fetchGames();
+    initializeSocket(setGames, navigate);
+  }, [navigate]);
 
   const handleCreateGame = () => {
     if (localStorage.getItem("player-data")) {
@@ -55,46 +55,32 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  const handleSubmitNewPlayer = async ({ playerName, playerColor, gameId }) => {
-    const playerData = { name: playerName, color: playerColor };
+  const handleSubmitNewPlayer = async ({ playerName, playerColor }) => {
+    const playerData = { name: playerName, color: playerColor, gameId };
     if (mode === "create") {
       try {
-        // DB POST Request - Create Game
-        const response = await createGame({ playerData });
-        if (response) {
-          setGameId(response.gameId);
-          localStorage.setItem(
-            "player-data",
-            JSON.stringify({
-              name: playerName,
-              color: playerColor,
-              gameId: response.gameId,
-            })
-          );
-          navigate(`/${response.gameId}`);
-        }
+        const newGameId = await socketCreateGame(playerData);
+        localStorage.setItem(
+          "player-data",
+          JSON.stringify({ ...playerData, gameId: newGameId })
+        );
+        navigate(`/${newGameId}`);
       } catch (error) {
         console.error(`Error creating game (Home.jsx): ${error}`);
       }
     } else if (mode === "join") {
       try {
-        // DB POST Request - Join Game
-        const response = await joinGame(gameId, playerData);
-        if (response) {
-          localStorage.setItem(
-            "player-data",
-            JSON.stringify({
-              name: playerName,
-              color: playerColor,
-              gameId: gameId,
-            })
-          );
-          navigate(`/${gameId}`);
-        }
+        localStorage.setItem(
+          "player-data",
+          JSON.stringify({ ...playerData, gameId })
+        );
+        socketJoinGame(gameId, playerData);
+        navigate(`/${gameId}`);
       } catch (error) {
         console.error(`Error joining game: ${error}`);
       }
     }
+    setIsModalOpen(false);
   };
 
   return (

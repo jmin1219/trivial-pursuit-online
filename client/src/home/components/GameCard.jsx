@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { deleteGame, fetchGameData } from "@/services/api/homeApi";
+import { apiFetchGameData } from "@/services/api/homeApi";
+import { socketDeleteGame } from "@/services/sockets/gamesSocket";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 export default function GameCard({ game, onJoin }) {
   const [players, setPlayers] = useState([]);
   const navigate = useNavigate();
@@ -12,14 +14,14 @@ export default function GameCard({ game, onJoin }) {
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const response = await fetchGameData(game.gameId);
+        const response = await apiFetchGameData(game.gameId);
         setPlayers(response.players);
       } catch (error) {
         console.error(`Error fetching in-game players: ${error.message}`);
       }
     };
     fetchPlayers();
-  }, [game.gameId]);
+  }, [game]);
 
   const currentPlayerData = JSON.parse(localStorage.getItem("player-data"));
 
@@ -28,10 +30,12 @@ export default function GameCard({ game, onJoin }) {
   };
 
   const handleDelete = async () => {
-    try {
-      await deleteGame(game.gameId);
-    } catch (error) {
-      console.error(`Error deleting game: ${error.message}`);
+    // TODO: Check if the current player is in the game before deleting it
+    if (currentPlayerData && game.gameId === currentPlayerData.gameId) {
+      socketDeleteGame(game.gameId);
+      localStorage.removeItem("player-data");
+    } else {
+      alert("You can't delete a game you're not in.");
     }
   };
 
