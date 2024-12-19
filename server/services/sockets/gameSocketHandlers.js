@@ -5,6 +5,8 @@ export const gameSocketHandlers = (socket, io) => {
     try {
       const game = await GameService.createGame(data.playerData);
       io.emit("game-created", game);
+      console.log(`Player ${data.playerData.name} joined game ${game.gameId}`);
+      socket.join(game.gameId);
       cb({ gameId: game.gameId });
     } catch (error) {
       console.error(`Error creating game (gameSocketHandlers.js): ${error}`);
@@ -15,7 +17,8 @@ export const gameSocketHandlers = (socket, io) => {
   socket.on("join-game", async (data) => {
     try {
       const game = await GameService.joinGame(data.gameId, data.playerData);
-      socket.join(data.gameId);
+      console.log(`Player ${data.playerData.name} joined game ${data.gameId}`);
+      socket.join(game.gameId);
       io.emit("player-joined", game);
     } catch (error) {
       console.error(`Error joining game (gameSocketHandlers.js): ${error}`);

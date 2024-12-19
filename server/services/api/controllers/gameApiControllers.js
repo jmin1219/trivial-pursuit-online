@@ -18,3 +18,15 @@ export const getGameData = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getChatLog = async (req, res) => {
+  const { gameId } = req.params;
+  try {
+    const chatLog = await GameService.getChatLog(gameId);
+    if (chatLog) {
+      res.json(chatLog);
+    }
+  } catch (error) {
+    res.status(404).json({ error: "Chat log not found" });
+  }
+};

@@ -1,3 +1,4 @@
+import { chatSocketHandlers } from "../services/sockets/chatSocketHandlers.js";
 import { gameSocketHandlers } from "../services/sockets/gameSocketHandlers.js";
 
 const configureSocket = (io) => {
@@ -5,6 +6,7 @@ const configureSocket = (io) => {
     console.log(`✅ Connection Socket ID: ${socket.id}`);
 
     gameSocketHandlers(socket, io);
+    chatSocketHandlers(socket, io);
 
     socket.on("disconnect", () => {
       console.log(`❌ Disconnection Socket ID: ${socket.id}`);

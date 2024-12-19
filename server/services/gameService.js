@@ -21,6 +21,11 @@ export const GameService = {
     return await Game.findOne({ gameId }).populate("players");
   },
 
+  getChatLog: async (gameId) => {
+    const game = await Game.findOne({ gameId });
+    return game.chatLog;
+  },
+
   createGame: async (playerData) => {
     const gameId = await generateGameId();
     const player = new Player(playerData);

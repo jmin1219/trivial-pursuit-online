@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { apiFetchAvailableGames } from "@/services/api/homeApi";
 import {
-  initializeSocket,
+  initializeGamesSocket,
   socketCreateGame,
   socketJoinGame,
 } from "@/services/sockets/gamesSocket";
@@ -24,7 +24,7 @@ export default function Home() {
       setGames(availableGames);
     };
     fetchGames();
-    initializeSocket(setGames, navigate);
+    initializeGamesSocket(setGames, navigate);
   }, [navigate]);
 
   const handleCreateGame = () => {

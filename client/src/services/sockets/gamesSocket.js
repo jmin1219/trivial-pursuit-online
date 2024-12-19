@@ -23,7 +23,7 @@ const updateGames = (setGames, updatedGame, action) => {
   });
 };
 
-export const initializeSocket = (setGames, navigate) => {
+export const initializeGamesSocket = (setGames, navigate) => {
   clientSocket.on("connect", () => {
     console.log("Connected to socket server.");
   });

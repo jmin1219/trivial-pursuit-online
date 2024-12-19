@@ -44,8 +44,11 @@ export default function GameBoard() {
   // Player Tokens
 
   return (
-    <div className="board-container">
-      <svg viewBox="10 -25 350 350" className="board">
+    <div className="w-full h-full flex justify-center items-center">
+      <svg
+        viewBox="-25 -25 350 350"
+        className="w-full h-full max-w-full max-h-full"
+      >
         {/* Outer circle (Wheel) - Non-Wedge Spaces */}
         {outerNonWedge.map((_, index) => {
           const groupIndex = Math.floor(index / 6);

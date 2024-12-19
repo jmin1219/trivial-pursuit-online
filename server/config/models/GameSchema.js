@@ -35,6 +35,13 @@ const gameSchema = new mongoose.Schema({
       ref: "Player",
     },
   ],
+  chatLog: [
+    {
+      sender: String,
+      message: String,
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
   turnOrder: {
     type: [String], // Array of player names in random order
     default: [],
