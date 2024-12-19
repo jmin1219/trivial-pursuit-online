@@ -17,9 +17,15 @@ export const gameSocketHandlers = (socket, io) => {
   socket.on("join-game", async (data) => {
     try {
       const game = await GameService.joinGame(data.gameId, data.playerData);
-      console.log(`Player ${data.playerData.name} joined game ${data.gameId}`);
       socket.join(game.gameId);
       io.emit("player-joined", game);
+
+      const joinMessage = {
+        sender: "server",
+        message: `${data.playerData.name} has joined the game as ${data.playerData.color}.`,
+        timestamp: new Date(),
+      };
+      io.to(data.gameId).emit("receive-message", joinMessage);
     } catch (error) {
       console.error(`Error joining game (gameSocketHandlers.js): ${error}`);
     }

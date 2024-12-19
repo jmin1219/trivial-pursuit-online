@@ -57,10 +57,18 @@ export default function ChatBox({ gameId }) {
               msg.sender === playerName ? "text-right" : "text-left"
             }`}
           >
-            {msg.sender !== playerName && (
-              <span className="font-bold">{msg.sender}:</span>
-            )}{" "}
-            {msg.message}
+            {msg.sender === "server" ? (
+              <span className="italic font-bold text-gray-400">
+                {msg.message}
+              </span>
+            ) : (
+              <>
+                {msg.sender !== playerName && (
+                  <span className="font-bold">{msg.sender}:</span>
+                )}{" "}
+                {msg.message}
+              </>
+            )}
           </div>
         ))}
       </div>
