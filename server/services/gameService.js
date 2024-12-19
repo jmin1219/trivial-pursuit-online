@@ -26,6 +26,13 @@ export const GameService = {
     return game.chatLog;
   },
 
+  addToChatLog: async (gameId, messageData) => {
+    const game = await Game.findOne({ gameId });
+    game.chatLog.push(messageData);
+    await game.save();
+    return game.chatLog;
+  },
+
   createGame: async (playerData) => {
     const gameId = await generateGameId();
     const player = new Player(playerData);
@@ -44,12 +51,11 @@ export const GameService = {
     return game;
   },
 
-  leaveGame: async (gameId, playerData) => {
-    const game = await Game.findOne({ gameId });
-    game.players = game.players.filter(
-      (player) => player.name !== playerData.name
-    );
+  leaveGame: async (gameId, playerName) => {
+    const game = await Game.findOne({ gameId }).populate("players");
+    game.players = game.players.filter((player) => player.name !== playerName);
     await game.save();
+    await Player.deleteOne({ name: playerName });
     return game;
   },
 

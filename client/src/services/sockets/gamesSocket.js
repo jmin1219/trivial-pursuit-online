@@ -73,8 +73,8 @@ export const socketDeleteGame = (gameId) => {
   clientSocket.emit("delete-game", { gameId });
 };
 
-export const leaveGame = (gameId, playerData) => {
-  clientSocket.emit("leave-game", { gameId, playerData });
+export const leaveGame = (playerData) => {
+  clientSocket.emit("leave-game", playerData);
 };
 
 export const fetchAvailableGames = () => {
