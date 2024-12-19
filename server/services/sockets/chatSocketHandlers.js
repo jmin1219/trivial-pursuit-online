@@ -3,6 +3,7 @@ import { Game } from "../../config/models/GameSchema.js";
 export const chatSocketHandlers = (socket, io) => {
   socket.on("join-chat", async ({ gameId }) => {
     socket.join(gameId);
+    console.log(`Socket joined chat room: ${gameId}`);
 
     const game = await Game.findOne({ gameId });
     if (game) {

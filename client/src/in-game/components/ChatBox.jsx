@@ -8,11 +8,12 @@ import propTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 
 export default function ChatBox({ gameId }) {
+  const playerData = JSON.parse(localStorage.getItem("player-data"));
+  const playerName = playerData ? playerData.name : "Unknown";
+
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState([]);
   const chatLogRef = useRef(null);
-  const playerData = JSON.parse(localStorage.getItem("player-data"));
-  const playerName = playerData ? playerData.name : "Unknown";
 
   useEffect(() => {
     const fetchChatLog = async () => {
@@ -22,7 +23,6 @@ export default function ChatBox({ gameId }) {
     fetchChatLog();
     initializeChatSocket(setChatLog, gameId);
   }, [gameId]);
-  console.log(chatLog);
 
   // Scroll to bottom of chat log when new message is received
   useEffect(() => {
@@ -51,8 +51,16 @@ export default function ChatBox({ gameId }) {
         ref={chatLogRef}
       >
         {chatLog.map((msg, index) => (
-          <div key={index} className="text-left w-full text-sm">
-            <span className="font-bold">{msg.sender}:</span> {msg.message}
+          <div
+            key={index}
+            className={`w-full text-sm border border-slate-500 rounded-sm mb-1 p-1 ${
+              msg.sender === playerName ? "text-right" : "text-left"
+            }`}
+          >
+            {msg.sender !== playerName && (
+              <span className="font-bold">{msg.sender}:</span>
+            )}{" "}
+            {msg.message}
           </div>
         ))}
       </div>

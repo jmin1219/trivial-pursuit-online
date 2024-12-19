@@ -1,6 +1,4 @@
-import { io } from "socket.io-client";
-
-const clientSocket = io("http://localhost:3001");
+import clientSocket from "../socket";
 
 const updateGames = (setGames, updatedGame, action) => {
   setGames((prevGames) => {
@@ -25,7 +23,7 @@ const updateGames = (setGames, updatedGame, action) => {
 
 export const initializeGamesSocket = (setGames, navigate) => {
   clientSocket.on("connect", () => {
-    console.log("Connected to socket server.");
+    console.log(`Connected to socket server.`);
   });
 
   clientSocket.on("available-games", (games) => {

@@ -1,19 +1,19 @@
-import { io } from "socket.io-client";
+import clientSocket from "../socket";
 
-const clientSocket = io("http://localhost:3001");
-
-const updateChat = (setChat, newMessage) => {
-  setChat((prevChat) => [...prevChat, newMessage]);
+const updateChat = (setChat, newMessageData) => {
+  setChat((prevChat) => [...prevChat, newMessageData]);
 };
 
 export const initializeChatSocket = (setChat, gameId) => {
-  clientSocket.on("connect", () => {
-    console.log(`Connected to socket server. (${gameId})`);
-    clientSocket.emit("join-chat", { gameId });
-  });
+  if (!clientSocket.connected) {
+    clientSocket.on("connect", () => {
+      console.log(`Connected to socket server. (${gameId})`);
+      clientSocket.emit("join-chat", { gameId });
+    });
+  }
 
-  clientSocket.on("receive-message", ({ message }) => {
-    updateChat(setChat, message);
+  clientSocket.on("receive-message", (messageData) => {
+    updateChat(setChat, messageData);
   });
 
   // Only used when a client joints a game that already has chat messages or refreshes page.
