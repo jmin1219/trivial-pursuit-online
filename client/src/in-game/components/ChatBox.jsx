@@ -47,30 +47,33 @@ export default function ChatBox({ gameId }) {
   return (
     <div className="flex flex-col h-full p-1 bg-gray-700 text-white rounded-lg">
       <div
-        className="flex-1 overflow-y-auto mb-1 px-2 py-1 border rounded-md"
+        className="flex-1 overflow-y-auto mb-1 px-2 py-1 border rounded-md flex flex-col-reverse"
         ref={chatLogRef}
       >
-        {chatLog.map((msg, index) => (
-          <div
-            key={index}
-            className={`w-full text-sm border border-slate-500 rounded-sm mb-1 p-1 ${
-              msg.sender === playerName ? "text-right" : "text-left"
-            }`}
-          >
-            {msg.sender === "server" ? (
-              <span className="italic font-bold text-gray-400">
-                {msg.message}
-              </span>
-            ) : (
-              <>
-                {msg.sender !== playerName && (
-                  <span className="font-bold">{msg.sender}:</span>
-                )}{" "}
-                {msg.message}
-              </>
-            )}
-          </div>
-        ))}
+        {chatLog
+          .slice()
+          .reverse()
+          .map((msg, index) => (
+            <div
+              key={index}
+              className={`w-full text-sm border border-slate-500 rounded-sm mb-1 p-1 ${
+                msg.sender === playerName ? "text-right" : "text-left"
+              }`}
+            >
+              {msg.sender === "server" ? (
+                <span className="italic font-bold text-gray-400">
+                  {msg.message}
+                </span>
+              ) : (
+                <>
+                  {msg.sender !== playerName && (
+                    <span className="font-bold">{msg.sender}:</span>
+                  )}{" "}
+                  {msg.message}
+                </>
+              )}
+            </div>
+          ))}
       </div>
       <div className="flex gap-1 mt-auto">
         <input
