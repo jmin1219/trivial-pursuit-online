@@ -10,12 +10,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { leaveGame } from "@/services/sockets/gamesSocket";
+import { leaveGame } from "@/services/sockets/homeSocket";
+import propTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-// import PlayerWedgeToken from "./PlayerWedgeToken";
+import PlayerWedgeToken from "./PlayerWedgeToken";
 
-export default function Scoreboard({ players }) {
+export default function Scoreboard({ playersData }) {
   const navigate = useNavigate();
+  console.log(playersData);
 
   const handleLeaveGame = () => {
     const playerData = JSON.parse(localStorage.getItem("player-data"));
@@ -27,20 +29,28 @@ export default function Scoreboard({ players }) {
   };
 
   return (
-    <div className=" w-full h-full flex flex-col">
-      <h2>Scoreboard</h2>
-      <ul className="player-token-list flex-grow">
-        {/* {players.map((p, index) => (
-          <li key={p.id}>
-            <PlayerWedgeToken playerData={p} playerNum={index + 1} />
-          </li>
-        ))} */}
-      </ul>
+    <div className="flex flex-col h-full p-1 bg-gray-700 text-white rounded-lg relative">
+      <div className="w-full h-full flex flex-col rounded-lg border overflow-hidden">
+        <h2 className="text-center font-bold text-xl mt-1">Scoreboard</h2>
+        {/* PLAYER WEDGE TOKENS */}
+        <ul
+          className={`w-full h-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto justify-items-center items-center`}
+        >
+          {playersData.map((playerData) => (
+            <li key={playerData._id} className="my-1">
+              <PlayerWedgeToken playerData={playerData} />
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* LEAVE GAME BUTTON */}
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="destructive" className="m-2 text-sm h-7 rounded-lg">
+          <Button
+            variant="destructive"
+            className=" text-sm h-7 rounded-lg absolute bottom-3 left-1/2 transform -translate-x-1/2"
+          >
             Leave Game
           </Button>
         </AlertDialogTrigger>
@@ -63,3 +73,7 @@ export default function Scoreboard({ players }) {
     </div>
   );
 }
+
+Scoreboard.propTypes = {
+  playersData: propTypes.array.isRequired,
+};

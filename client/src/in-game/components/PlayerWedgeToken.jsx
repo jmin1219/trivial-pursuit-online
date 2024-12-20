@@ -1,37 +1,32 @@
 import PropTypes from "prop-types";
+import { COLORS } from "../../../../shared/constants/colors";
 
-export default function PlayerWedgeToken({ playerData, playerNum }) {
-  const { color, wedges } = playerData;
+export default function PlayerWedgeToken({ playerData }) {
+  const { color, name, wedges } = playerData;
   const SLICE_ANGLES = [0, 60, 120, 180, 240, 300];
 
   return (
-    <div id={color} className="token-container">
-      <p
-        className="playerNum"
-        style={{
-          color: COLOR_CODES[color],
-          fontWeight: "bold",
-          textAlign: "center",
-        }}
+    <div className="flex flex-col items-center justify-center">
+      <p className={`text-center text-${color} font-bold`}>{name}</p>
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+        className="w-8 h-8 md:w-12 md:h-12 lg:w-16 lg:h-16"
       >
-        Player {playerNum}
-      </p>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
         {/* COLOR WEDGES OR EMPTY SPACES */}
         {SLICE_ANGLES.map((angle, index) => (
           <path
-            key={COLORS[index]}
+            key={index}
             d={`M50,50 L${50 + 45 * Math.cos((angle * Math.PI) / 180)},${
               50 + 45 * Math.sin((angle * Math.PI) / 180)
             } A45,45 0 0,1 ${
               50 + 45 * Math.cos(((angle + 60) * Math.PI) / 180)
             },${50 + 45 * Math.sin(((angle + 60) * Math.PI) / 180)} Z`}
             fill={
-              wedges.includes(COLORS[index])
-                ? COLOR_CODES[COLORS[index]]
+              wedges.includes(Object.keys(COLORS)[index])
+                ? COLORS[Object.keys(COLORS)[index]].hex
                 : "lightgray"
             }
-            stroke={COLOR_CODES[color]}
             strokeWidth="2"
           />
         ))}
@@ -41,7 +36,7 @@ export default function PlayerWedgeToken({ playerData, playerNum }) {
           cy="50"
           r="45"
           fill="none"
-          stroke={COLOR_CODES[color]}
+          stroke={COLORS[color].hex}
           strokeWidth="7"
         />
         {/* inner circle white stroke */}
@@ -58,10 +53,6 @@ export default function PlayerWedgeToken({ playerData, playerNum }) {
   );
 }
 
-PlayerToken.propTypes = {
-  playerData: PropTypes.shape({
-    color: PropTypes.string.isRequired,
-    wedges: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  playerNum: PropTypes.number.isRequired,
+PlayerWedgeToken.propTypes = {
+  playerData: PropTypes.object.isRequired,
 };

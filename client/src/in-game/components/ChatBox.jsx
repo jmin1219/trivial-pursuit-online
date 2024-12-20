@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { apiFetchChatLog } from "@/services/api/gameApi";
+import { apiFetchChatLog } from "@/services/api/chatApi";
 import {
   initializeChatSocket,
   sendMessage,
@@ -47,7 +47,7 @@ export default function ChatBox({ gameId }) {
   return (
     <div className="flex flex-col h-full p-1 bg-gray-700 text-white rounded-lg">
       <div
-        className="flex-1 overflow-y-auto mb-1 px-2 py-1 border rounded-md flex flex-col justify-end"
+        className="flex-1 overflow-y-auto mb-1 px-2 py-1 border rounded-md"
         ref={chatLogRef}
       >
         {chatLog.map((msg, index) => (
@@ -72,7 +72,7 @@ export default function ChatBox({ gameId }) {
           </div>
         ))}
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1 mt-auto">
         <input
           type="text"
           placeholder="Enter message"

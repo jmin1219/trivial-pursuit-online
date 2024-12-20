@@ -1,14 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
 
-const apiChat = axios.create({
-  baseURL: "http://localhost:3001/api/games/chat-log",
-});
-
-export const apiFetchChatLog = async (gameId) => {
-  try {
-    const response = await apiChat.get(`/${gameId}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching chat log: ${error}`);
-  }
-};
+// const apiGame = axios.create({
+//   baseURL: "http://localhost:3001/api/games",
+// });

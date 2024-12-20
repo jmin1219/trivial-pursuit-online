@@ -1,5 +1,5 @@
 import { createRequire } from "module";
-import {COLORS} from "../shared/constants/colors.js";
+import { COLORS } from "../shared/constants/colors.js";
 
 const require = createRequire(import.meta.url);
 
@@ -12,6 +12,10 @@ export default {
       serif: ["Mea-Culpa", "Georgia"],
     },
     extend: {
+      flexGrow: {
+        2: 2,
+        3: 3,
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

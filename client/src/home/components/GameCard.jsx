@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { apiFetchGameData } from "@/services/api/homeApi";
-import { socketDeleteGame } from "@/services/sockets/gamesSocket";
+import { socketDeleteGame } from "@/services/sockets/homeSocket";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

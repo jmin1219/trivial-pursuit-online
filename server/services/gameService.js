@@ -48,7 +48,7 @@ export const GameService = {
     const game = await Game.findOne({ gameId });
     game.players.push(player._id);
     await game.save();
-    return game;
+    return game.populate("players");
   },
 
   leaveGame: async (gameId, playerName) => {

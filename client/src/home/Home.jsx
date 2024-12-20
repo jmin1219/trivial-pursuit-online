@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { apiFetchAvailableGames } from "@/services/api/homeApi";
 import {
-  initializeGamesSocket,
+  initializeHomeSocket,
   socketCreateGame,
   socketJoinGame,
-} from "@/services/sockets/gamesSocket";
+} from "@/services/sockets/homeSocket";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
@@ -24,7 +24,7 @@ export default function Home() {
       setGames(availableGames);
     };
     fetchGames();
-    initializeGamesSocket(setGames, navigate);
+    initializeHomeSocket(setGames, navigate);
   }, [navigate]);
 
   const handleCreateGame = () => {
