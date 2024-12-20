@@ -34,17 +34,21 @@ export const gameSocketHandlers = (socket, io) => {
   });
 
   socket.on("leave-game", async (data) => {
-    // TODO: If the game is empty, delete it
     try {
       const game = await GameService.leaveGame(data.gameId, data.name);
-      const leaveMessage = {
-        sender: "server",
-        message: `${data.name} has left the game.`,
-        timestamp: new Date(),
-      };
-      await GameService.addToChatLog(data.gameId, leaveMessage);
-      io.to(data.gameId).emit("receive-message", leaveMessage);
-      io.emit("player-left", game);
+      if (game.players.length === 0) {
+        await GameService.deleteGame(data.gameId);
+        io.emit("game-deleted", data.gameId);
+      } else {
+        const leaveMessage = {
+          sender: "server",
+          message: `${data.name} has left the game.`,
+          timestamp: new Date(),
+        };
+        await GameService.addToChatLog(data.gameId, leaveMessage);
+        io.to(data.gameId).emit("receive-message", leaveMessage);
+        io.emit("player-left", game);
+      }
     } catch (error) {
       console.error(`Error leaving game (gameSocketHandlers.js): ${error}`);
     }

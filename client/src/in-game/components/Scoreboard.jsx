@@ -40,7 +40,7 @@ export default function Scoreboard({ players }) {
       {/* LEAVE GAME BUTTON */}
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="destructive" className="m-3 text-sm h-7 rounded-lg">
+          <Button variant="destructive" className="m-2 text-sm h-7 rounded-lg">
             Leave Game
           </Button>
         </AlertDialogTrigger>
