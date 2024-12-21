@@ -1,13 +1,13 @@
 import e from "express";
 import {
-  getAvailableGames,
+  getAllGames,
   getChatLog,
   getGameData,
 } from "../controllers/gameApiControllers.js";
 
 const router = e.Router();
 
-router.get("/", getAvailableGames);
+router.get("/", getAllGames);
 router.get("/:gameId", getGameData);
 router.get("/chat-log/:gameId", getChatLog);
 

@@ -33,6 +33,15 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
+  socket.on("start-game", async (data) => {
+    try {
+      const game = await GameService.startGame(data.gameId);
+      io.to(data.gameId).emit("update-game-state", game);
+    } catch (error) {
+      console.error("Error starting game (gameSocketHandlers.js):", error);
+    }
+  });
+
   socket.on("leave-game", async (data) => {
     try {
       const game = await GameService.leaveGame(data.gameId, data.name);
@@ -83,5 +92,15 @@ export const gameSocketHandlers = (socket, io) => {
         `Error fetching game data (gameSocketHandlers.js): ${error}`
       );
     }
+  });
+
+  socket.on("request-dice-roll", ({ gameId, playerName }) => {
+    io.to(gameId).emit("dice-rolling");
+
+    setTimeout(() => {
+      const finalDiceValue = Math.floor(Math.random() * 6) + 1;
+      const prompt = `${playerName} rolled a ${finalDiceValue}!`;
+      io.to(gameId).emit("dice-rolled", { finalDiceValue, prompt });
+    }, 2000);
   });
 };

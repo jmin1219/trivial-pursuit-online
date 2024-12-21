@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { apiFetchGameData } from "@/services/api/homeApi";
-import { initializeGameSocket } from "@/services/sockets/gameSocket";
+import { initializeGameSocket, startGame } from "@/services/sockets/gameSocket";
 import { CircleHelpIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ChatBox from "./components/ChatBox";
 import GameBoard from "./components/GameBoard";
 import Scoreboard from "./components/Scoreboard";
+import Dice from "./components/Dice";
 
 export default function GameLobby() {
   const gameId = useParams().gameId;
@@ -23,6 +24,14 @@ export default function GameLobby() {
     initializeGameSocket(setGameState, setPlayersData);
   }, [gameId]);
 
+  const handleStartGame = () => {
+    setGameState((prevState) => ({
+      ...prevState,
+      isStarted: true,
+    }));
+    startGame(gameId);
+  };
+
   return (
     <div className="flex h-full">
       {/* LEFT SIDE - GAMEBOARD */}
@@ -36,7 +45,17 @@ export default function GameLobby() {
           <Scoreboard playersData={playersData} />
         </div>
         <div className="h-[25%]">
-          <p>Dice</p>
+          {gameState.isStarted === true ? (
+            <Dice gameState={gameState} />
+          ) : (
+            <div className="bg-gray-700 text-white rounded-lg h-full w-full p-1">
+              <div className="w-full h-full flex flex-col rounded-lg border justify-center items-center">
+                <Button className="bg-emerald-600" onClick={handleStartGame}>
+                  Start Game
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
         <div className="h-[45%]">
           <ChatBox gameId={gameId} />

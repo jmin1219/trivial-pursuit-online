@@ -13,8 +13,8 @@ const generateGameId = async () => {
 };
 
 export const GameService = {
-  getAvailableGames: async () => {
-    return await Game.find({ isStarted: false });
+  getAllGames: async () => {
+    return await Game.find();
   },
 
   getGameData: async (gameId) => {
@@ -49,6 +49,13 @@ export const GameService = {
     game.players.push(player._id);
     await game.save();
     return game.populate("players");
+  },
+
+  startGame: async (gameId) => {
+    const game = await Game.findOne({ gameId });
+    game.isStarted = true;
+    await game.save();
+    return game;
   },
 
   leaveGame: async (gameId, playerName) => {

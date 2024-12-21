@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function GameCard({ game, onJoin }) {
   const [players, setPlayers] = useState([]);
+  const [isStarted, setIsStarted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +17,7 @@ export default function GameCard({ game, onJoin }) {
       try {
         const response = await apiFetchGameData(game.gameId);
         setPlayers(response.players);
+        setIsStarted(response.isStarted);
       } catch (error) {
         console.error(`Error fetching in-game players: ${error.message}`);
       }
@@ -30,7 +32,6 @@ export default function GameCard({ game, onJoin }) {
   };
 
   const handleDelete = async () => {
-    // TODO: Check if the current player is in the game before deleting it
     if (currentPlayerData && game.gameId === currentPlayerData.gameId) {
       socketDeleteGame(game.gameId);
       localStorage.removeItem("player-data");
@@ -57,18 +58,19 @@ export default function GameCard({ game, onJoin }) {
         </CardContent>
       </div>
       <CardFooter className="flex justify-between p-4">
-        {currentPlayerData && game.gameId === currentPlayerData.gameId ? (
-          <Button className="bg-[#2196F3]" onClick={onEnter}>
-            Enter
-          </Button>
-        ) : (
-          <Button className="bg-[#4CAF50]" onClick={onJoin}>
-            Join
-          </Button>
-        )}
+        {/* {!isStarted &&
+          (currentPlayerData && game.gameId === currentPlayerData.gameId ? (
+            <Button className="bg-[#2196F3]" onClick={onEnter}>
+              Enter
+            </Button>
+          ) : (
+            <Button className="bg-[#4CAF50]" onClick={onJoin}>
+              Join
+            </Button>
+          ))}
         <Button variant="destructive" onClick={handleDelete}>
           Delete
-        </Button>
+        </Button> */}
       </CardFooter>
     </Card>
   );

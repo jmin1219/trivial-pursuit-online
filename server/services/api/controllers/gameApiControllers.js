@@ -1,8 +1,8 @@
 import { GameService } from "../../gameService.js";
 
-export const getAvailableGames = async (req, res) => {
+export const getAllGames = async (req, res) => {
   try {
-    const games = await GameService.getAvailableGames();
+    const games = await GameService.getAllGames();
     res.json({ games });
   } catch (error) {
     res.status(500).json({ error: error.message });

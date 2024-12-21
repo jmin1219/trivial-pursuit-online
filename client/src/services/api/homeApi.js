@@ -6,7 +6,7 @@ const apiGames = axios.create({
   baseURL: "http://localhost:3001/api/games",
 });
 
-export const apiFetchAvailableGames = async () => {
+export const apiFetchAllGames = async () => {
   try {
     const response = await apiGames.get("/");
     return response.data.games;

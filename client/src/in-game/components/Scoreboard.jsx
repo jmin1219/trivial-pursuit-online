@@ -17,7 +17,6 @@ import PlayerWedgeToken from "./PlayerWedgeToken";
 
 export default function Scoreboard({ playersData }) {
   const navigate = useNavigate();
-  console.log(playersData);
 
   const handleLeaveGame = () => {
     const playerData = JSON.parse(localStorage.getItem("player-data"));

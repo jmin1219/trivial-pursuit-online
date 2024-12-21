@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { apiFetchAvailableGames } from "@/services/api/homeApi";
+import { apiFetchAllGames } from "@/services/api/homeApi";
 import {
   initializeHomeSocket,
   socketCreateGame,
@@ -20,7 +20,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchGames = async () => {
-      const availableGames = await apiFetchAvailableGames();
+      const availableGames = await apiFetchAllGames();
       setGames(availableGames);
     };
     fetchGames();
