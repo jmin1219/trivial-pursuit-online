@@ -57,20 +57,23 @@ export default function GameCard({ game, onJoin }) {
           </ul>
         </CardContent>
       </div>
-      <CardFooter className="flex justify-between p-4">
-        {/* {!isStarted &&
-          (currentPlayerData && game.gameId === currentPlayerData.gameId ? (
+      <CardFooter className="flex justify-between p-4 w-full">
+        {currentPlayerData && game.gameId === currentPlayerData.gameId ? (
+          <>
             <Button className="bg-[#2196F3]" onClick={onEnter}>
               Enter
             </Button>
-          ) : (
-            <Button className="bg-[#4CAF50]" onClick={onJoin}>
-              Join
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
             </Button>
-          ))}
-        <Button variant="destructive" onClick={handleDelete}>
-          Delete
-        </Button> */}
+          </>
+        ) : !isStarted ? (
+          <Button className="bg-[#4CAF50] w-full" onClick={onJoin}>
+            Join
+          </Button>
+        ) : (
+          <p className="text-center w-full">This game has already started.</p>
+        )}
       </CardFooter>
     </Card>
   );
