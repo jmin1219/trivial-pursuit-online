@@ -18,7 +18,9 @@ export const GameService = {
   },
 
   getGameData: async (gameId) => {
-    return await Game.findOne({ gameId }).populate("players");
+    return await Game.findOne({ gameId })
+      .populate("players")
+      .populate("chatLog");
   },
 
   getChatLog: async (gameId) => {
@@ -58,12 +60,16 @@ export const GameService = {
     return game.populate("players");
   },
 
-  leaveGame: async (gameId, playerName) => {
-    const game = await Game.findOne({ gameId }).populate("players");
-    game.players = game.players.filter((player) => player.name !== playerName);
+  leaveGame: async (playerData) => {
+    const game = await Game.findOne({ gameId: playerData.gameId }).populate(
+      "players"
+    );
+    game.players = game.players.filter(
+      (player) => player.name !== playerData.name
+    );
     await game.save();
-    await Player.deleteOne({ name: playerName });
-    return game.populate("players");
+    await Player.deleteOne({ name: playerData.name });
+    return game;
   },
 
   deleteGame: async (gameId) => {
@@ -71,6 +77,8 @@ export const GameService = {
     if (game) {
       await Player.deleteMany({ _id: { $in: game.players } });
       await Game.deleteOne({ gameId });
+    } else {
+      throw new Error(`Game with ID ${gameId} not found.`);
     }
   },
 };

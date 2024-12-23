@@ -42,20 +42,20 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
-  socket.on("leave-game", async (data) => {
+  socket.on("leave-game", async (playerData) => {
     try {
-      const game = await GameService.leaveGame(data.gameId, data.name);
+      const game = await GameService.leaveGame(playerData);
       if (game.players.length === 0) {
-        await GameService.deleteGame(data.gameId);
-        io.emit("game-deleted", data.gameId);
+        await GameService.deleteGame(game.gameId);
+        io.emit("game-deleted", game.gameId);
       } else {
         const leaveMessage = {
           sender: "server",
-          message: `${data.name} has left the game.`,
+          message: `${playerData.name} has left the game.`,
           timestamp: new Date(),
         };
-        await GameService.addToChatLog(data.gameId, leaveMessage);
-        io.to(data.gameId).emit("receive-message", leaveMessage);
+        await GameService.addToChatLog(game.gameId, leaveMessage);
+        io.to(game.gameId).emit("receive-message", leaveMessage);
         io.emit("player-left", game);
       }
     } catch (error) {
@@ -86,7 +86,7 @@ export const gameSocketHandlers = (socket, io) => {
   socket.on("update-game-state", async (gameId) => {
     try {
       const game = await GameService.getGameData(gameId);
-      socket.emit("game-data", game);
+      socket.emit("updated-game-state", game);
     } catch (error) {
       console.error(
         `Error fetching game data (gameSocketHandlers.js): ${error}`

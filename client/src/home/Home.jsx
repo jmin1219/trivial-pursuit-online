@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useHomeContext } from "../context/HomeContext";
 import "./Home.css";
 import GameCard from "./components/GameCard";
 import NewPlayerModal from "./components/NewPlayerModal";
-import { useHomeContext } from "../context/HomeContext";
 
 export default function Home() {
   const { games, socketCreateGame, socketJoinGame } = useHomeContext();
@@ -25,7 +25,6 @@ export default function Home() {
     setGameId(null);
     setIsModalOpen(true);
   };
-
   const handleJoinGame = (gameId) => {
     if (localStorage.getItem("player-data")) {
       alert(
@@ -37,11 +36,9 @@ export default function Home() {
     setGameId(gameId);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
   const handleSubmitNewPlayer = async ({ playerName, playerColor }) => {
     const playerData = { name: playerName, color: playerColor, gameId };
     if (mode === "create") {
@@ -69,7 +66,6 @@ export default function Home() {
     }
     setIsModalOpen(false);
   };
-
   const handleEnterGame = (gameId) => {
     navigate(`/${gameId}`);
   };

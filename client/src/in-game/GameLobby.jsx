@@ -1,20 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { CircleHelpIcon } from "lucide-react";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useGameContext } from "../context/GameContext";
 import ChatBox from "./components/ChatBox";
+import Dice from "./components/Dice";
 import GameBoard from "./components/GameBoard";
 import Scoreboard from "./components/Scoreboard";
-import Dice from "./components/Dice";
-import { useGameSocket } from "../context/GameSocketContext";
 
 export default function GameLobby() {
-  const gameId = useParams().gameId;
-  const { gameState, playersData, getPlayersData, requestDiceRoll, startGame } =
-    useGameSocket();
-  useEffect(() => {
-    getPlayersData(gameId);
-  }, [gameId, getPlayersData]);
+  const { gameId } = useParams();
+  const { gameState, startGame } = useGameContext();
 
   const handleStartGame = () => {
     if (gameState.players.length < 2) {

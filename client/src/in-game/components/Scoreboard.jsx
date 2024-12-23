@@ -12,23 +12,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import PlayerWedgeToken from "./PlayerWedgeToken";
-import { useGameSocket } from "@/context/GameSocketContext";
-import { useHomeSocket } from "@/context/HomeSocketContext";
+import { useGameContext } from "../../context/GameContext";
 
 export default function Scoreboard() {
-  const { playersData } = useGameSocket();
-  const { socketLeaveGame } = useHomeSocket();
   const navigate = useNavigate();
+  const { gameState, leaveGame } = useGameContext();
+  const playersData = gameState.players;
 
   const handleLeaveGame = () => {
     const playerData = JSON.parse(localStorage.getItem("player-data"));
     if (playerData) {
-      socketLeaveGame(playerData);
+      leaveGame(playerData);
       localStorage.removeItem("player-data");
       navigate("/");
     }
   };
-  console.log(playersData);
 
   return (
     <div className="flex flex-col h-full p-1 bg-gray-700 text-white rounded-lg relative">
@@ -38,11 +36,12 @@ export default function Scoreboard() {
         <ul
           className={`w-full h-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto justify-items-center items-center`}
         >
-          {playersData.map((playerData) => (
-            <li key={playerData._id} className="my-1">
-              <PlayerWedgeToken playerData={playerData} />
-            </li>
-          ))}
+          {playersData &&
+            playersData.map((playerData) => (
+              <li key={playerData._id} className="my-1">
+                <PlayerWedgeToken playerData={playerData} />
+              </li>
+            ))}
         </ul>
       </div>
 

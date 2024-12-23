@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import propTypes from "prop-types";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import clientSocket from "../services/socket.js";
-import propTypes from "prop-types";
 
 const HomeContext = createContext();
 
@@ -40,7 +40,8 @@ export const HomeProvider = ({ children }) => {
       }
     });
     return () => {
-      clientSocket.off("available-games");
+      clientSocket.off("connect");
+      clientSocket.off("fetched-active-games");
       clientSocket.off("game-created");
       clientSocket.off("player-joined");
       clientSocket.off("player-left");
@@ -48,6 +49,8 @@ export const HomeProvider = ({ children }) => {
       clientSocket.off("game-deleted");
     };
   }, [navigate]);
+
+// ------------------------------------------
 
   const updateGames = (data, action) => {
     setGames((prevGames) => {
