@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import GameCard from "./components/GameCard";
 import NewPlayerModal from "./components/NewPlayerModal";
-import { useHomeSocket } from "../context/HomeSocketContext";
+import { useHomeContext } from "../context/HomeContext";
 
 export default function Home() {
-  const { games, socketCreateGame, socketJoinGame } = useHomeSocket();
+  const { games, socketCreateGame, socketJoinGame } = useHomeContext();
+
   const [mode, setMode] = useState(""); // "create" or "join"
   const [gameId, setGameId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,12 +46,12 @@ export default function Home() {
     const playerData = { name: playerName, color: playerColor, gameId };
     if (mode === "create") {
       try {
-        const newGameId = await socketCreateGame(playerData);
+        const game = await socketCreateGame(playerData);
         localStorage.setItem(
           "player-data",
-          JSON.stringify({ ...playerData, gameId: newGameId })
+          JSON.stringify({ ...playerData, gameId: game.gameId })
         );
-        navigate(`/${newGameId}`);
+        navigate(`/${game.gameId}`);
       } catch (error) {
         console.error(`Error creating game (Home.jsx): ${error}`);
       }

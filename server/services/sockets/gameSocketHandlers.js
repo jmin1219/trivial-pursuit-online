@@ -1,16 +1,15 @@
 import { GameService } from "../../services/gameService.js";
 
 export const gameSocketHandlers = (socket, io) => {
-  socket.on("create-game", async (data, cb) => {
+  socket.on("create-game", async (playerData, cb) => {
     try {
-      const game = await GameService.createGame(data.playerData);
+      const game = await GameService.createGame(playerData);
       io.emit("game-created", game);
-      console.log(`Player ${data.playerData.name} joined game ${game.gameId}`);
+      console.log(`Player ${playerData.name} joined game ${game.gameId}`);
       socket.join(game.gameId);
-      cb({ gameId: game.gameId });
+      cb(game);
     } catch (error) {
       console.error(`Error creating game (gameSocketHandlers.js): ${error}`);
-      cb({ error: "Error creating game" });
     }
   });
 
@@ -64,19 +63,19 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
-  socket.on("delete-game", async (data) => {
+  socket.on("delete-game", async (gameId) => {
     try {
-      await GameService.deleteGame(data.gameId);
-      io.emit("game-deleted", data.gameId);
+      await GameService.deleteGame(gameId);
+      io.emit("game-deleted", gameId);
     } catch (error) {
       console.error(`Error deleting game (gameSocketHandlers.js): ${error}`);
     }
   });
 
-  socket.on("fetch-available-games", async () => {
+  socket.on("fetch-active-games", async () => {
     try {
-      const games = await GameService.getAvailableGames();
-      socket.emit("available-games", games);
+      const games = await GameService.getAllGames();
+      socket.emit("fetched-active-games", games);
     } catch (error) {
       console.error(
         `Error fetching available games (gameSocketHandlers.js): ${error}`

@@ -2,22 +2,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import PropTypes from "prop-types";
-import { useHomeSocket } from "../../context/HomeSocketContext";
+import { useHomeContext } from "../../context/HomeContext";
 
 export default function GameCard({ game, onJoin, onEnter }) {
-  const { socketDeleteData } = useHomeSocket();
+  const { socketDeleteGame } = useHomeContext();
   const currentPlayerData = JSON.parse(localStorage.getItem("player-data"));
   const { players, isStarted } = game;
 
   const handleDelete = () => {
     if (currentPlayerData && game.gameId === currentPlayerData.gameId) {
-      socketDeleteData(game.gameId);
+      socketDeleteGame(game.gameId);
       localStorage.removeItem("player-data");
     } else {
       alert("You can't delete a game you're not in.");
     }
   };
-
 
   return (
     <Card className="p-4 shadow-lg flex flex-col justify-between h-64 border border-black">
@@ -37,19 +36,22 @@ export default function GameCard({ game, onJoin, onEnter }) {
         </CardContent>
       </div>
       <CardFooter className="flex justify-between p-4">
-        {/* {!isStarted &&
-          (currentPlayerData && game.gameId === currentPlayerData.gameId ? (
+        {currentPlayerData && game.gameId === currentPlayerData.gameId ? (
+          <>
             <Button className="bg-[#2196F3]" onClick={onEnter}>
               Enter
             </Button>
-          ) : (
-            <Button className="bg-[#4CAF50]" onClick={onJoin}>
-              Join
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
             </Button>
-          ))}
-        <Button variant="destructive" onClick={handleDelete}>
-          Delete
-        </Button> */}
+          </>
+        ) : isStarted ? (
+          <p className="text-center w-full">This game has already started.</p>
+        ) : (
+          <Button className="bg-[#4CAF50] w-full" onClick={onJoin}>
+            Join
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
