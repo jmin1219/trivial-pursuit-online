@@ -10,9 +10,9 @@ export const useGameContext = () => useContext(GameContext);
 export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState({});
   const [diceState, setDiceState] = useState({
-    value: 1,
+    diceValue: 1,
     isShuffling: false,
-    prompt: "Roll dice!",
+    dicePrompt: "Roll dice!",
   });
   const { gameId } = useParams();
 
@@ -25,20 +25,55 @@ export const GameProvider = ({ children }) => {
     clientSocket.on("updated-game-state", (updatedGameState) => {
       setGameState(updatedGameState);
     });
+    clientSocket.on("player-joined", (updatedGameState) => {
+      setGameState(updatedGameState);
+    });
+    clientSocket.on("player-left", (updatedGameState) => {
+      setGameState(updatedGameState);
+    });
+    clientSocket.on("dice-rolling", () => {
+      setDiceState((prevState) => ({
+        ...prevState,
+        isShuffling: true,
+        dicePrompt: "Rolling...",
+      }));
+
+      const interval = setInterval(() => {
+        const randomDiceValue = Math.floor(Math.random() * 6) + 1;
+        setDiceState((prevState) => ({
+          ...prevState,
+          diceValue: randomDiceValue,
+        }));
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+      }, 2000);
+    });
+    clientSocket.on("dice-rolled", ({ finalDiceValue, prompt }) => {
+      setDiceState({
+        diceValue: finalDiceValue,
+        isShuffling: false,
+        dicePrompt: prompt,
+      });
+    });
     return () => {
       clientSocket.off("connect");
       clientSocket.off("update-game-state");
+      clientSocket.off("player-joined");
+      clientSocket.off("player-left");
+      clientSocket.off("dice-rolled");
+      clientSocket.off("dice-rolling");
     };
-  }, [gameId]);
+  }, [gameId, diceState]);
 
   // ------------------------------------------
 
-  const startGame = (gameId) => {
-    clientSocket.emit("start-game", gameId);
+  const startGame = (gameState) => {
+    clientSocket.emit("start-game", gameState);
   };
 
-  const requestRollDice = (gameId) => {
-    clientSocket.emit("request-roll-dice", gameId);
+  const requestRollDice = (gameState) => {
+    clientSocket.emit("request-roll-dice", gameState);
   };
 
   const leaveGame = (playerData) => {

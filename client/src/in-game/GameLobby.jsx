@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { CircleHelpIcon } from "lucide-react";
-import { useParams } from "react-router-dom";
 import { useGameContext } from "../context/GameContext";
 import ChatBox from "./components/ChatBox";
 import Dice from "./components/Dice";
@@ -8,16 +7,21 @@ import GameBoard from "./components/GameBoard";
 import Scoreboard from "./components/Scoreboard";
 
 export default function GameLobby() {
-  const { gameId } = useParams();
   const { gameState, startGame } = useGameContext();
+  const gameId = gameState.gameId;
 
   const handleStartGame = () => {
     if (gameState.players.length < 2) {
       alert("You need at least 2 players to start the game.");
       return;
     }
-    startGame(gameId);
+    startGame(gameState);
   };
+
+  if (!gameState || !gameId) {
+    return <div>Loading...</div>;
+  }
+  console.log(gameState);
 
   return (
     <div className="flex h-full">
@@ -33,7 +37,7 @@ export default function GameLobby() {
         </div>
         <div className="h-[25%]">
           {gameState.isStarted === true ? (
-            <Dice gameState={gameState} />
+            <Dice />
           ) : (
             <div className="bg-gray-700 text-white rounded-lg h-full w-full p-1">
               <div className="w-full h-full flex flex-col rounded-lg border justify-center items-center">

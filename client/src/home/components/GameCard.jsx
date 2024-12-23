@@ -28,9 +28,9 @@ export default function GameCard({ game, onJoin, onEnter }) {
           <Label className="text-md mb-1">Players ({players.length}): </Label>
           <ul className="list-none grid grid-cols-2 gap-x-1 gap-y-1 mt-2 text-sm text-center">
             {players.map((player, index) => (
-              <li key={index} className={`text-${player.color}`}>{`${
-                player.name
-              } - ${player.color.toUpperCase()}`}</li>
+              <li key={index} className={`text-${player.color}`}>
+                {player.name} - {player.color.toUpperCase()}
+              </li>
             ))}
           </ul>
         </CardContent>

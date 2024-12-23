@@ -5,7 +5,6 @@ export const gameSocketHandlers = (socket, io) => {
     try {
       const game = await GameService.createGame(playerData);
       io.emit("game-created", game);
-      console.log(`Player ${playerData.name} joined game ${game.gameId}`);
       socket.join(game.gameId);
       cb(game);
     } catch (error) {
@@ -32,10 +31,10 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
-  socket.on("start-game", async (data) => {
+  socket.on("start-game", async (gameState) => {
     try {
-      const game = await GameService.startGame(data.gameId);
-      io.to(data.gameId).emit("update-game-state", game);
+      const game = await GameService.startGame(gameState.gameId);
+      io.to(game.gameId).emit("updated-game-state", game);
       io.emit("game-started", game);
     } catch (error) {
       console.error("Error starting game (gameSocketHandlers.js):", error);
@@ -94,13 +93,14 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
-  socket.on("request-dice-roll", ({ gameId, playerName }) => {
-    io.to(gameId).emit("dice-rolling");
+  socket.on("request-roll-dice", (gameState) => {
+    io.to(gameState.gameId).emit("dice-rolling");
+
+    const finalDiceValue = Math.floor(Math.random() * 6) + 1;
+    const prompt = `Player rolled a ${finalDiceValue}!`;
 
     setTimeout(() => {
-      const finalDiceValue = Math.floor(Math.random() * 6) + 1;
-      const prompt = `${playerName} rolled a ${finalDiceValue}!`;
-      io.to(gameId).emit("dice-rolled", { finalDiceValue, prompt });
-    }, 2000);
+      io.to(gameState.gameId).emit("dice-rolled", { finalDiceValue, prompt });
+    }, 3000);
   });
 };

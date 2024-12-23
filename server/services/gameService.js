@@ -23,18 +23,6 @@ export const GameService = {
       .populate("chatLog");
   },
 
-  getChatLog: async (gameId) => {
-    const game = await Game.findOne({ gameId });
-    return game.chatLog;
-  },
-
-  addToChatLog: async (gameId, messageData) => {
-    const game = await Game.findOne({ gameId });
-    game.chatLog.push(messageData);
-    await game.save();
-    return game.chatLog;
-  },
-
   createGame: async (playerData) => {
     const gameId = await generateGameId();
     const player = new Player(playerData);
@@ -54,10 +42,10 @@ export const GameService = {
   },
 
   startGame: async (gameId) => {
-    const game = await Game.findOne({ gameId });
+    const game = await Game.findOne({ gameId }).populate("players");
     game.isStarted = true;
     await game.save();
-    return game.populate("players");
+    return game;
   },
 
   leaveGame: async (playerData) => {
@@ -80,5 +68,17 @@ export const GameService = {
     } else {
       throw new Error(`Game with ID ${gameId} not found.`);
     }
+  },
+
+  getChatLog: async (gameId) => {
+    const game = await Game.findOne({ gameId });
+    return game.chatLog;
+  },
+
+  addToChatLog: async (gameId, messageData) => {
+    const game = await Game.findOne({ gameId });
+    game.chatLog.push(messageData);
+    await game.save();
+    return game.chatLog;
   },
 };
