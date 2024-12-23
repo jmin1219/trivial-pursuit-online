@@ -1,31 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { apiFetchAllGames } from "@/services/api/homeApi";
-import {
-  initializeHomeSocket,
-  socketCreateGame,
-  socketJoinGame,
-} from "@/services/sockets/homeSocket";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import GameCard from "./components/GameCard";
 import NewPlayerModal from "./components/NewPlayerModal";
+import { useHomeSocket } from "../context/HomeSocketContext";
 
 export default function Home() {
+  const { games, socketCreateGame, socketJoinGame } = useHomeSocket();
   const [mode, setMode] = useState(""); // "create" or "join"
   const [gameId, setGameId] = useState(null);
-  const [games, setGames] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchGames = async () => {
-      const availableGames = await apiFetchAllGames();
-      setGames(availableGames);
-    };
-    fetchGames();
-    initializeHomeSocket(setGames, navigate);
-  }, [navigate]);
 
   const handleCreateGame = () => {
     if (localStorage.getItem("player-data")) {
@@ -83,6 +69,10 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
+  const handleEnterGame = (gameId) => {
+    navigate(`/${gameId}`);
+  };
+
   return (
     <div className="home-container h-[100%] flex flex-col items-center">
       {/* HEADER */}
@@ -103,6 +93,7 @@ export default function Home() {
               key={game.gameId}
               game={game}
               onJoin={() => handleJoinGame(game.gameId)}
+              onEnter={() => handleEnterGame(game.gameId)}
             />
           ))
         ) : (

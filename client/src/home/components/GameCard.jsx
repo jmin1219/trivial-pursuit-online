@@ -1,44 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { apiFetchGameData } from "@/services/api/homeApi";
-import { socketDeleteGame } from "@/services/sockets/homeSocket";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHomeSocket } from "../../context/HomeSocketContext";
 
-export default function GameCard({ game, onJoin }) {
-  const [players, setPlayers] = useState([]);
-  const [isStarted, setIsStarted] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const response = await apiFetchGameData(game.gameId);
-        setPlayers(response.players);
-        setIsStarted(response.isStarted);
-      } catch (error) {
-        console.error(`Error fetching in-game players: ${error.message}`);
-      }
-    };
-    fetchPlayers();
-  }, [game]);
-
+export default function GameCard({ game, onJoin, onEnter }) {
+  const { socketDeleteData } = useHomeSocket();
   const currentPlayerData = JSON.parse(localStorage.getItem("player-data"));
+  const { players, isStarted } = game;
 
-  const onEnter = () => {
-    navigate(`/${game.gameId}`);
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (currentPlayerData && game.gameId === currentPlayerData.gameId) {
-      socketDeleteGame(game.gameId);
+      socketDeleteData(game.gameId);
       localStorage.removeItem("player-data");
     } else {
       alert("You can't delete a game you're not in.");
     }
   };
+
 
   return (
     <Card className="p-4 shadow-lg flex flex-col justify-between h-64 border border-black">
@@ -57,23 +36,20 @@ export default function GameCard({ game, onJoin }) {
           </ul>
         </CardContent>
       </div>
-      <CardFooter className="flex justify-between p-4 w-full">
-        {currentPlayerData && game.gameId === currentPlayerData.gameId ? (
-          <>
+      <CardFooter className="flex justify-between p-4">
+        {/* {!isStarted &&
+          (currentPlayerData && game.gameId === currentPlayerData.gameId ? (
             <Button className="bg-[#2196F3]" onClick={onEnter}>
               Enter
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              Delete
+          ) : (
+            <Button className="bg-[#4CAF50]" onClick={onJoin}>
+              Join
             </Button>
-          </>
-        ) : !isStarted ? (
-          <Button className="bg-[#4CAF50] w-full" onClick={onJoin}>
-            Join
-          </Button>
-        ) : (
-          <p className="text-center w-full">This game has already started.</p>
-        )}
+          ))}
+        <Button variant="destructive" onClick={handleDelete}>
+          Delete
+        </Button> */}
       </CardFooter>
     </Card>
   );
@@ -82,4 +58,5 @@ export default function GameCard({ game, onJoin }) {
 GameCard.propTypes = {
   game: PropTypes.object.isRequired,
   onJoin: PropTypes.func.isRequired,
+  onEnter: PropTypes.func.isRequired,
 };

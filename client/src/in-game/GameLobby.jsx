@@ -1,34 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { apiFetchGameData } from "@/services/api/homeApi";
-import { initializeGameSocket, startGame } from "@/services/sockets/gameSocket";
 import { CircleHelpIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ChatBox from "./components/ChatBox";
 import GameBoard from "./components/GameBoard";
 import Scoreboard from "./components/Scoreboard";
 import Dice from "./components/Dice";
+import { useGameSocket } from "../context/GameSocketContext";
 
 export default function GameLobby() {
   const gameId = useParams().gameId;
-  const [gameState, setGameState] = useState({});
-  const [playersData, setPlayersData] = useState([]);
-
+  const { gameState, playersData, getPlayersData, requestDiceRoll, startGame } =
+    useGameSocket();
   useEffect(() => {
-    const fetchGameData = async () => {
-      const gameData = await apiFetchGameData(gameId);
-      setGameState(gameData);
-      setPlayersData(gameData.players);
-    };
-    fetchGameData();
-    initializeGameSocket(setGameState, setPlayersData);
-  }, [gameId]);
+    getPlayersData(gameId);
+  }, [gameId, getPlayersData]);
 
   const handleStartGame = () => {
-    setGameState((prevState) => ({
-      ...prevState,
-      isStarted: true,
-    }));
+    if (gameState.players.length < 2) {
+      alert("You need at least 2 players to start the game.");
+      return;
+    }
     startGame(gameId);
   };
 
@@ -42,7 +34,7 @@ export default function GameLobby() {
       {/* RIGHT SIDE: SCOREBOARD, DICE, & CHAT */}
       <div className="w-1/3 h-full flex flex-col">
         <div className="h-[30%]">
-          <Scoreboard playersData={playersData} />
+          <Scoreboard />
         </div>
         <div className="h-[25%]">
           {gameState.isStarted === true ? (

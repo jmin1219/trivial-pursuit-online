@@ -3,6 +3,8 @@ import "./App.css";
 import Home from "./home/Home";
 import GameLobby from "./in-game/GameLobby";
 import Header from "./partials/Header";
+import { HomeSocketProvider } from "./context/HomeSocketContext";
+import { GameSocketProvider } from "./context/GameSocketContext";
 
 function App() {
   return (
@@ -10,10 +12,14 @@ function App() {
       <Header />
       <main>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/:gameId" element={<GameLobby />} />
-          </Routes>
+          <HomeSocketProvider>
+            <GameSocketProvider>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/:gameId" element={<GameLobby />} />
+              </Routes>
+            </GameSocketProvider>
+          </HomeSocketProvider>
         </BrowserRouter>
       </main>
     </>

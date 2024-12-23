@@ -14,7 +14,7 @@ const generateGameId = async () => {
 
 export const GameService = {
   getAllGames: async () => {
-    return await Game.find();
+    return await Game.find().populate("players");
   },
 
   getGameData: async (gameId) => {
@@ -39,7 +39,7 @@ export const GameService = {
     await player.save();
     const game = new Game({ gameId, players: [player._id] });
     await game.save();
-    return game;
+    return game.populate("players");
   },
 
   joinGame: async (gameId, playerData) => {
@@ -55,7 +55,7 @@ export const GameService = {
     const game = await Game.findOne({ gameId });
     game.isStarted = true;
     await game.save();
-    return game;
+    return game.populate("players");
   },
 
   leaveGame: async (gameId, playerName) => {
@@ -63,7 +63,7 @@ export const GameService = {
     game.players = game.players.filter((player) => player.name !== playerName);
     await game.save();
     await Player.deleteOne({ name: playerName });
-    return game;
+    return game.populate("players");
   },
 
   deleteGame: async (gameId) => {

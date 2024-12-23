@@ -6,6 +6,8 @@ import "./index.css";
 createRoot(document.getElementById("root")).render(
   // TODO: Uncomment the <StrictMode> component below to enable React Strict Mode.
   // <StrictMode>
+
   <App />
+
   // </StrictMode>
 );

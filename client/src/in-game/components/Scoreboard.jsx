@@ -10,22 +10,25 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { leaveGame } from "@/services/sockets/homeSocket";
-import propTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import PlayerWedgeToken from "./PlayerWedgeToken";
+import { useGameSocket } from "@/context/GameSocketContext";
+import { useHomeSocket } from "@/context/HomeSocketContext";
 
-export default function Scoreboard({ playersData }) {
+export default function Scoreboard() {
+  const { playersData } = useGameSocket();
+  const { socketLeaveGame } = useHomeSocket();
   const navigate = useNavigate();
 
   const handleLeaveGame = () => {
     const playerData = JSON.parse(localStorage.getItem("player-data"));
     if (playerData) {
-      leaveGame(playerData);
+      socketLeaveGame(playerData);
       localStorage.removeItem("player-data");
       navigate("/");
     }
   };
+  console.log(playersData);
 
   return (
     <div className="flex flex-col h-full p-1 bg-gray-700 text-white rounded-lg relative">
@@ -72,7 +75,3 @@ export default function Scoreboard({ playersData }) {
     </div>
   );
 }
-
-Scoreboard.propTypes = {
-  playersData: propTypes.array.isRequired,
-};

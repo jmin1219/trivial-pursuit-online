@@ -37,6 +37,7 @@ export const gameSocketHandlers = (socket, io) => {
     try {
       const game = await GameService.startGame(data.gameId);
       io.to(data.gameId).emit("update-game-state", game);
+      io.emit("game-started", game);
     } catch (error) {
       console.error("Error starting game (gameSocketHandlers.js):", error);
     }
@@ -83,7 +84,7 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
-  socket.on("fetch-game-data", async (gameId) => {
+  socket.on("update-game-state", async (gameId) => {
     try {
       const game = await GameService.getGameData(gameId);
       socket.emit("game-data", game);
