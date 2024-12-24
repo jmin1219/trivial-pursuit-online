@@ -36,9 +36,19 @@ export const gameSocketHandlers = (socket, io) => {
     try {
       const game = await GameService.leaveGame(playerData);
       io.emit("player-left", game);
-      if (game.players.length === 0) {
+      socket.leave(playerData.gameId);
+
+      if (game.isStarted === true && game.players.length === 1) {
+        io.to(game.gameId).emit(
+          "game-won",
+          "All other players have left the game."
+        );
         await GameService.deleteGame(game.gameId);
         io.emit("game-deleted", game.gameId);
+      } else if (game.players.length === 0) {
+        await GameService.deleteGame(game.gameId);
+        io.emit("game-deleted", game.gameId);
+        return;
       }
     } catch (error) {
       console.error(`Error leaving game (gameSocketHandlers.js): ${error}`);

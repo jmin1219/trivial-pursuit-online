@@ -1,6 +1,6 @@
 import propTypes from "prop-types";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import clientSocket from "../services/socket.js";
 
 const GameContext = createContext();
@@ -10,6 +10,7 @@ export const useGameContext = () => useContext(GameContext);
 export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState({});
   const { gameId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     clientSocket.emit("update-game-state", gameId);
@@ -50,6 +51,11 @@ export const GameProvider = ({ children }) => {
         clearInterval(interval);
       }, 1400);
     });
+    clientSocket.on("game-won", (message) => {
+      alert(message);
+      localStorage.removeItem("player-data");
+      navigate("/");
+    });
     return () => {
       clientSocket.off("connect");
       clientSocket.off("update-game-state");
@@ -58,7 +64,7 @@ export const GameProvider = ({ children }) => {
       clientSocket.off("dice-rolled");
       clientSocket.off("dice-rolling");
     };
-  }, [gameId]);
+  }, [gameId, navigate]);
 
   // ------------------------------------------
 
@@ -72,8 +78,6 @@ export const GameProvider = ({ children }) => {
 
   const leaveGame = (playerData) => {
     clientSocket.emit("leave-game", playerData);
-    // TODO: when player leaves in the middle of a game, continue
-    // TODO: When second to last player leaves in middle of game, last player wins, end game
   };
 
   return (
