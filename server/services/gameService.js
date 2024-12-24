@@ -81,6 +81,15 @@ export const GameService = {
     }
   },
 
+  updateDiceState: async (gameId, finalDiceValue, prompt) => {
+    const game = await Game.findOne({ gameId });
+    game.diceState.diceValue = finalDiceValue;
+    game.diceState.dicePrompt = prompt;
+    game.diceState.isShuffling = false;
+    await game.save();
+    return game.populate("players");
+  },
+
   getChatLog: async (gameId) => {
     const game = await Game.findOne({ gameId });
     return game.chatLog;

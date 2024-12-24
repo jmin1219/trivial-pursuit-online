@@ -93,14 +93,20 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
-  socket.on("request-roll-dice", ({ gameState, playerData }) => {
+  socket.on("request-roll-dice", async ({ gameState, playerData }) => {
     io.to(gameState.gameId).emit("dice-rolling");
 
     const finalDiceValue = Math.floor(Math.random() * 6) + 1;
     const prompt = `${playerData.name} rolled a ${finalDiceValue}!`;
 
-    setTimeout(() => {
-      io.to(gameState.gameId).emit("dice-rolled", { finalDiceValue, prompt });
+    setTimeout(async () => {
+      const newGameState = await GameService.updateDiceState(
+        gameState.gameId,
+        finalDiceValue,
+        prompt
+      );
+      console.log(newGameState);
+      io.to(gameState.gameId).emit("updated-game-state", newGameState);
     }, 1500);
   });
 };

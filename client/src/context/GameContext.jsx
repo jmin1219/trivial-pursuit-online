@@ -18,6 +18,7 @@ export const GameProvider = ({ children }) => {
       console.log(`Connected to game socket server for game ${gameId}.`);
     });
     clientSocket.on("updated-game-state", (updatedGameState) => {
+      console.log("TEST", updatedGameState);
       setGameState(updatedGameState);
     });
     clientSocket.on("player-joined", (updatedGameState) => {
@@ -48,18 +49,7 @@ export const GameProvider = ({ children }) => {
       }, 100);
       setTimeout(() => {
         clearInterval(interval);
-      }, 1010);
-    });
-    clientSocket.on("dice-rolled", ({ finalDiceValue, prompt }) => {
-      setGameState((prevState) => ({
-        ...prevState,
-        diceState: {
-          ...prevState.diceState,
-          diceValue: finalDiceValue,
-          dicePrompt: prompt,
-          isShuffling: false,
-        },
-      }));
+      }, 1400);
     });
     return () => {
       clientSocket.off("connect");
@@ -83,6 +73,7 @@ export const GameProvider = ({ children }) => {
 
   const leaveGame = (playerData) => {
     clientSocket.emit("leave-game", playerData);
+    // TODO: when player leaves in the middle of a game, continue
   };
 
   return (
