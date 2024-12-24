@@ -55,7 +55,7 @@ export default function GameLobby() {
       {/* HELP BUTTON: Show Game Rules in left bottom corner */}
       <div className="absolute bottom-0 left-0 m-2">
         <Button variant="ghost" size="icon">
-          {/* TODO: Clicking Icon opens modal for game rules */}
+          {/* TODO: GAME RULES - Clicking Icon opens modal for game rules */}
           <CircleHelpIcon size={32} />
         </Button>
       </div>

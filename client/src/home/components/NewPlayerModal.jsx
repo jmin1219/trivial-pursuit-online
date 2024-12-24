@@ -65,7 +65,6 @@ export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
           <CardDescription>Select a player name and color.</CardDescription>
         </CardHeader>
         <CardContent>
-          {/* TODO: Make these inputs required and check for duplicate player names in game. */}
           <form className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1">
               <Label className="text-md">Player Name</Label>
