@@ -31,6 +31,7 @@ export const GameProvider = ({ children }) => {
         ...prevState,
         diceState: {
           ...prevState.diceState,
+          dicePrompt: "",
           isShuffling: true,
         },
       }));
@@ -47,7 +48,7 @@ export const GameProvider = ({ children }) => {
       }, 100);
       setTimeout(() => {
         clearInterval(interval);
-      }, 2000);
+      }, 1010);
     });
     clientSocket.on("dice-rolled", ({ finalDiceValue, prompt }) => {
       setGameState((prevState) => ({
@@ -76,8 +77,8 @@ export const GameProvider = ({ children }) => {
     clientSocket.emit("start-game", gameState);
   };
 
-  const requestRollDice = (gameState) => {
-    clientSocket.emit("request-roll-dice", gameState);
+  const requestRollDice = (gameState, playerData) => {
+    clientSocket.emit("request-roll-dice", { gameState, playerData });
   };
 
   const leaveGame = (playerData) => {

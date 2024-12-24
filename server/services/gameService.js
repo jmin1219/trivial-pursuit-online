@@ -51,6 +51,10 @@ export const GameService = {
     game.isStarted = true;
     // Shuffle player order
     shuffleArray(game.players);
+    // Set dice prompt for first player
+    game.diceState.dicePrompt = `${
+      game.players[game.currentTurnIndex].name
+    }'s turn to roll!`;
     await game.save();
     return game;
   },

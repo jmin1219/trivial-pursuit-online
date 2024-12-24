@@ -42,7 +42,7 @@ const gameSchema = new mongoose.Schema({
       timestamp: { type: Date, default: Date.now },
     },
   ],
-  currentTurnPlayerIndex: {
+  currentTurnIndex: {
     type: Number,
     default: 0,
   },

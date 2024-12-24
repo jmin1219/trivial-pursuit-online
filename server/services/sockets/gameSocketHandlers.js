@@ -93,14 +93,14 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
-  socket.on("request-roll-dice", (gameState) => {
+  socket.on("request-roll-dice", ({ gameState, playerData }) => {
     io.to(gameState.gameId).emit("dice-rolling");
 
     const finalDiceValue = Math.floor(Math.random() * 6) + 1;
-    const prompt = `Player rolled a ${finalDiceValue}!`;
+    const prompt = `${playerData.name} rolled a ${finalDiceValue}!`;
 
     setTimeout(() => {
       io.to(gameState.gameId).emit("dice-rolled", { finalDiceValue, prompt });
-    }, 3000);
+    }, 1500);
   });
 };

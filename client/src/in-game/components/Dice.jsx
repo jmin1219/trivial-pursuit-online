@@ -10,11 +10,17 @@ export default function Dice() {
   const { gameState, requestRollDice } = useGameContext();
   const { diceState } = gameState;
   const diceImages = [dice1, dice2, dice3, dice4, dice5, dice6];
+  const playerData = JSON.parse(localStorage.getItem("player-data"));
 
   const handleRollDice = () => {
     if (diceState.isShuffling) return;
-    // TODO: Add player name using current turn order
-    requestRollDice(gameState);
+    if (
+      gameState.players[gameState.currentTurnIndex].name !== playerData.name
+    ) {
+      alert("It's not your turn to roll the dice!");
+      return;
+    }
+    requestRollDice(gameState, playerData);
   };
 
   if (!gameState) {
