@@ -1,39 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { apiFetchChatLog } from "@/services/api/chatApi";
-import {
-  initializeChatSocket,
-  sendMessage,
-} from "@/services/sockets/chatSocket";
-import propTypes from "prop-types";
-import { useEffect, useRef, useState } from "react";
+import { useChatContext } from "@/context/ChatContext";
+import { useGameContext } from "@/context/GameContext";
+import { useState } from "react";
 
-export default function ChatBox({ gameId }) {
+export default function ChatBox() {
   const playerData = JSON.parse(localStorage.getItem("player-data"));
-  const playerName = playerData ? playerData.name : "Unknown";
+  const { gameState } = useGameContext();
+  const { chatLog, chatLogRef, sendMessage } = useChatContext();
 
   const [message, setMessage] = useState("");
-  const [chatLog, setChatLog] = useState([]);
-  const chatLogRef = useRef(null);
-
-  useEffect(() => {
-    const fetchChatLog = async () => {
-      const fetchedChatLog = await apiFetchChatLog(gameId);
-      setChatLog(fetchedChatLog);
-    };
-    fetchChatLog();
-    initializeChatSocket(setChatLog, gameId);
-  }, [gameId]);
-
-  // Scroll to bottom of chat log when new message is received
-  useEffect(() => {
-    if (chatLogRef.current) {
-      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
-    }
-  }, [chatLog]);
 
   const handleSendMessage = () => {
     if (message.trim() !== "") {
-      sendMessage(gameId, message, playerName);
+      sendMessage(gameState.gameId, message, playerData.name);
       setMessage("");
     }
   };
@@ -46,36 +25,39 @@ export default function ChatBox({ gameId }) {
 
   return (
     <div className="flex flex-col h-full p-1 bg-gray-700 text-white rounded-lg">
+      {/* MESSAGE LOG */}
       <div
         className="flex-1 overflow-y-auto mb-1 px-2 py-1 border rounded-md flex flex-col-reverse"
         ref={chatLogRef}
       >
-        {chatLog
-          .slice()
-          .reverse()
-          .map((msg, index) => (
-            <div
-              key={index}
-              className={`w-full text-sm border border-slate-500 rounded-sm mb-1 p-1 ${
-                msg.sender === playerName ? "text-right" : "text-left"
-              }`}
-            >
-              {msg.sender === "server" ? (
-                <span className="italic font-bold text-gray-400">
-                  {msg.message}
-                </span>
-              ) : (
-                <>
-                  {msg.sender !== playerName && (
-                    <span className="font-bold">{msg.sender}:</span>
-                  )}{" "}
-                  {msg.message}
-                </>
-              )}
-            </div>
-          ))}
+        {chatLog &&
+          chatLog
+            .slice()
+            .reverse()
+            .map((msg, index) => (
+              <div
+                key={index}
+                className={`w-full text-sm border border-slate-500 rounded-sm mb-1 p-1 ${
+                  msg.sender === playerData.name ? "text-right" : "text-left"
+                }`}
+              >
+                {msg.sender === "server" ? (
+                  <span className="italic font-bold text-gray-400">
+                    {msg.message}
+                  </span>
+                ) : (
+                  <>
+                    {msg.sender !== playerData.name && (
+                      <span className="font-bold">{msg.sender}:</span>
+                    )}{" "}
+                    {msg.message}
+                  </>
+                )}
+              </div>
+            ))}
       </div>
       <div className="flex gap-1 mt-auto">
+        {/* MESSAGE INPUT FIELD */}
         <input
           type="text"
           placeholder="Enter message"
@@ -84,6 +66,7 @@ export default function ChatBox({ gameId }) {
           className="flex-1 p-2 rounded-lg bg-gray-600 text-white border border-white"
           onKeyDown={handleKeyDown}
         />
+        {/* SEND BUTTON */}
         <Button
           variant="outline"
           className="text-black "
@@ -95,7 +78,3 @@ export default function ChatBox({ gameId }) {
     </div>
   );
 }
-
-ChatBox.propTypes = {
-  gameId: propTypes.string.isRequired,
-};

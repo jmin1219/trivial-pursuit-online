@@ -40,8 +40,20 @@ export const GameService = {
   joinGame: async (gameId, playerData) => {
     const player = new Player(playerData);
     await player.save();
-    const game = await Game.findOne({ gameId });
-    game.players.push(player._id);
+    const game = await Game.findOneAndUpdate(
+      { gameId },
+      {
+        $push: {
+          players: player._id,
+          chatLog: {
+            sender: "server",
+            message: `${playerData.name} has joined the game.`,
+            timestamp: new Date(),
+          },
+        },
+      },
+      { new: true }
+    );
     await game.save();
     return game.populate("players");
   },
@@ -60,9 +72,19 @@ export const GameService = {
   },
 
   leaveGame: async (playerData) => {
-    const game = await Game.findOne({ gameId: playerData.gameId }).populate(
-      "players"
-    );
+    const game = await Game.findOneAndUpdate(
+      { gameId: playerData.gameId },
+      {
+        $push: {
+          chatLog: {
+            sender: "server",
+            message: `${playerData.name} has left the game.`,
+            timestamp: new Date(),
+          },
+        },
+      },
+      { new: true }
+    ).populate("players");
     game.players = game.players.filter(
       (player) => player.name !== playerData.name
     );
@@ -96,8 +118,11 @@ export const GameService = {
   },
 
   addToChatLog: async (gameId, messageData) => {
-    const game = await Game.findOne({ gameId });
-    game.chatLog.push(messageData);
+    const game = await Game.findOneAndUpdate(
+      { gameId },
+      { $push: { chatLog: messageData } },
+      { new: true }
+    );
     await game.save();
     return game.chatLog;
   },

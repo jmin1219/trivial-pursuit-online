@@ -11,6 +11,7 @@ export default function Dice() {
   const { diceState } = gameState;
   const diceImages = [dice1, dice2, dice3, dice4, dice5, dice6];
   const playerData = JSON.parse(localStorage.getItem("player-data"));
+  // TODO: IF IT'S NOT THE PLAYER'S TURN, DISABLE THE DICE ROLLING
 
   const handleRollDice = () => {
     if (diceState.isShuffling) return;

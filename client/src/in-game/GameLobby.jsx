@@ -8,7 +8,7 @@ import Scoreboard from "./components/Scoreboard";
 
 export default function GameLobby() {
   const { gameState, startGame } = useGameContext();
-  const gameId = gameState.gameId;
+  const gameId = gameState?.gameId;
 
   const handleStartGame = () => {
     if (gameState.players.length < 2) {
@@ -21,7 +21,6 @@ export default function GameLobby() {
   if (!gameState || !gameId) {
     return <div>Loading...</div>;
   }
-  console.log(gameState);
 
   return (
     <div className="flex h-full">
@@ -49,7 +48,7 @@ export default function GameLobby() {
           )}
         </div>
         <div className="h-[45%]">
-          <ChatBox gameId={gameId} />
+          <ChatBox />
         </div>
       </div>
 

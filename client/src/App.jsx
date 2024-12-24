@@ -5,6 +5,7 @@ import { HomeProvider } from "./context/HomeContext";
 import Home from "./home/Home";
 import GameLobby from "./in-game/GameLobby";
 import Header from "./partials/Header";
+import { ChatProvider } from "./context/ChatContext";
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
                 path="/:gameId"
                 element={
                   <GameProvider>
-                    <GameLobby />
+                    <ChatProvider>
+                      <GameLobby />
+                    </ChatProvider>
                   </GameProvider>
                 }
               />

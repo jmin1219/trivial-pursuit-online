@@ -50,7 +50,7 @@ export const HomeProvider = ({ children }) => {
     };
   }, [navigate]);
 
-// ------------------------------------------
+  // ------------------------------------------
 
   const updateGames = (data, action) => {
     setGames((prevGames) => {

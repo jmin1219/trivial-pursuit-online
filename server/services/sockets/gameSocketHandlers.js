@@ -17,15 +17,6 @@ export const gameSocketHandlers = (socket, io) => {
       const game = await GameService.joinGame(data.gameId, data.playerData);
       socket.join(game.gameId);
       io.emit("player-joined", game);
-
-      const joinMessage = {
-        sender: "server",
-        message: `${data.playerData.name} has joined the game as ${data.playerData.color}.`,
-        timestamp: new Date(),
-      };
-
-      await GameService.addToChatLog(data.gameId, joinMessage);
-      io.to(data.gameId).emit("receive-message", joinMessage);
     } catch (error) {
       console.error(`Error joining game (gameSocketHandlers.js): ${error}`);
     }
@@ -44,18 +35,10 @@ export const gameSocketHandlers = (socket, io) => {
   socket.on("leave-game", async (playerData) => {
     try {
       const game = await GameService.leaveGame(playerData);
+      io.emit("player-left", game);
       if (game.players.length === 0) {
         await GameService.deleteGame(game.gameId);
         io.emit("game-deleted", game.gameId);
-      } else {
-        const leaveMessage = {
-          sender: "server",
-          message: `${playerData.name} has left the game.`,
-          timestamp: new Date(),
-        };
-        await GameService.addToChatLog(game.gameId, leaveMessage);
-        io.to(game.gameId).emit("receive-message", leaveMessage);
-        io.emit("player-left", game);
       }
     } catch (error) {
       console.error(`Error leaving game (gameSocketHandlers.js): ${error}`);
@@ -105,7 +88,6 @@ export const gameSocketHandlers = (socket, io) => {
         finalDiceValue,
         prompt
       );
-      console.log(newGameState);
       io.to(gameState.gameId).emit("updated-game-state", newGameState);
     }, 1500);
   });

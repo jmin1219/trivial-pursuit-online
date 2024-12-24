@@ -18,7 +18,6 @@ export const GameProvider = ({ children }) => {
       console.log(`Connected to game socket server for game ${gameId}.`);
     });
     clientSocket.on("updated-game-state", (updatedGameState) => {
-      console.log("TEST", updatedGameState);
       setGameState(updatedGameState);
     });
     clientSocket.on("player-joined", (updatedGameState) => {
@@ -74,6 +73,7 @@ export const GameProvider = ({ children }) => {
   const leaveGame = (playerData) => {
     clientSocket.emit("leave-game", playerData);
     // TODO: when player leaves in the middle of a game, continue
+    // TODO: When second to last player leaves in middle of game, last player wins, end game
   };
 
   return (
