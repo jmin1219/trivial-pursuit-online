@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import dice1 from "../../assets/dice/dice1.png";
 import dice2 from "../../assets/dice/dice2.png";
 import dice3 from "../../assets/dice/dice3.png";
@@ -6,12 +5,11 @@ import dice4 from "../../assets/dice/dice4.png";
 import dice5 from "../../assets/dice/dice5.png";
 import dice6 from "../../assets/dice/dice6.png";
 import { useGameContext } from "../../context/GameContext";
-import clientSocket from "@/services/socket";
 
 export default function Dice() {
-  const { gameState, requestRollDice, diceState } = useGameContext();
+  const { gameState, requestRollDice } = useGameContext();
+  const { diceState } = gameState;
   const diceImages = [dice1, dice2, dice3, dice4, dice5, dice6];
-  const playerData = JSON.parse(localStorage.getItem("player-data"));
 
   const handleRollDice = () => {
     if (diceState.isShuffling) return;

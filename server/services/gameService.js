@@ -12,15 +12,20 @@ const generateGameId = async () => {
   return gameId;
 };
 
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
 export const GameService = {
   getAllGames: async () => {
     return await Game.find().populate("players");
   },
 
   getGameData: async (gameId) => {
-    return await Game.findOne({ gameId })
-      .populate("players")
-      .populate("chatLog");
+    return await Game.findOne({ gameId }).populate("players");
   },
 
   createGame: async (playerData) => {
@@ -44,6 +49,8 @@ export const GameService = {
   startGame: async (gameId) => {
     const game = await Game.findOne({ gameId }).populate("players");
     game.isStarted = true;
+    // Shuffle player order
+    shuffleArray(game.players);
     await game.save();
     return game;
   },

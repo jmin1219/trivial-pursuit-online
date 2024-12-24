@@ -36,6 +36,7 @@ export default function Scoreboard() {
         <ul
           className={`w-full h-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto justify-items-center items-center`}
         >
+          {/* TODO: Highlight current turn player */}
           {playersData &&
             playersData.map((playerData) => (
               <li key={playerData._id} className="my-1">

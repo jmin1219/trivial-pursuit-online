@@ -42,13 +42,23 @@ const gameSchema = new mongoose.Schema({
       timestamp: { type: Date, default: Date.now },
     },
   ],
-  turnOrder: {
-    type: [String], // Array of player names in random order
-    default: [],
-  },
   currentTurnPlayerIndex: {
     type: Number,
     default: 0,
+  },
+  diceState: {
+    diceValue: {
+      type: Number,
+      default: 1,
+    },
+    isShuffling: {
+      type: Boolean,
+      default: false,
+    },
+    dicePrompt: {
+      type: String,
+      default: "Roll Dice!",
+    },
   },
   usedQuestionIds: {
     // Array of trivia id's used in game

@@ -9,11 +9,6 @@ export const useGameContext = () => useContext(GameContext);
 
 export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState({});
-  const [diceState, setDiceState] = useState({
-    diceValue: 1,
-    isShuffling: false,
-    dicePrompt: "Roll dice!",
-  });
   const { gameId } = useParams();
 
   useEffect(() => {
@@ -32,17 +27,22 @@ export const GameProvider = ({ children }) => {
       setGameState(updatedGameState);
     });
     clientSocket.on("dice-rolling", () => {
-      setDiceState((prevState) => ({
+      setGameState((prevState) => ({
         ...prevState,
-        isShuffling: true,
-        dicePrompt: "Rolling...",
+        diceState: {
+          ...prevState.diceState,
+          isShuffling: true,
+        },
       }));
 
       const interval = setInterval(() => {
         const randomDiceValue = Math.floor(Math.random() * 6) + 1;
-        setDiceState((prevState) => ({
+        setGameState((prevState) => ({
           ...prevState,
-          diceValue: randomDiceValue,
+          diceState: {
+            ...prevState.diceState,
+            diceValue: randomDiceValue,
+          },
         }));
       }, 100);
       setTimeout(() => {
@@ -50,11 +50,15 @@ export const GameProvider = ({ children }) => {
       }, 2000);
     });
     clientSocket.on("dice-rolled", ({ finalDiceValue, prompt }) => {
-      setDiceState({
-        diceValue: finalDiceValue,
-        isShuffling: false,
-        dicePrompt: prompt,
-      });
+      setGameState((prevState) => ({
+        ...prevState,
+        diceState: {
+          ...prevState.diceState,
+          diceValue: finalDiceValue,
+          dicePrompt: prompt,
+          isShuffling: false,
+        },
+      }));
     });
     return () => {
       clientSocket.off("connect");
@@ -64,7 +68,7 @@ export const GameProvider = ({ children }) => {
       clientSocket.off("dice-rolled");
       clientSocket.off("dice-rolling");
     };
-  }, [gameId, diceState]);
+  }, [gameId]);
 
   // ------------------------------------------
 
@@ -85,8 +89,6 @@ export const GameProvider = ({ children }) => {
       value={{
         gameState,
         setGameState,
-        diceState,
-        setDiceState,
         startGame,
         requestRollDice,
         leaveGame,
