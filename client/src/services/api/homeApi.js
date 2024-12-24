@@ -6,15 +6,6 @@ const apiGames = axios.create({
   baseURL: "http://localhost:3001/api/games",
 });
 
-export const apiFetchAllGames = async () => {
-  try {
-    const response = await apiGames.get("/");
-    return response.data.games;
-  } catch (error) {
-    console.error(`Error fetching available games: ${error}`);
-  }
-};
-
 export const apiFetchGameData = async (gameId) => {
   try {
     const response = await apiGames.get(`/${gameId}`);
