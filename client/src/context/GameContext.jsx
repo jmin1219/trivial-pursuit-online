@@ -63,6 +63,7 @@ export const GameProvider = ({ children }) => {
       clientSocket.off("player-left");
       clientSocket.off("dice-rolled");
       clientSocket.off("dice-rolling");
+      clientSocket.off("game-won");
     };
   }, [gameId, navigate]);
 

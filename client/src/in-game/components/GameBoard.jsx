@@ -1,9 +1,15 @@
 import "../styles/GameBoard.css";
+import { useState, useMemo } from "react";
+import { COLORS } from "../../../../shared/constants/colors";
+import { useGameContext } from "../../context/GameContext";
 
 export default function GameBoard() {
-  const spokes = Array.from({ length: 6 }); // 6 spokes
-  const outerNonWedge = Array.from({ length: 36 }); // 36 non-wedge spaces on the outer wheel (6 groups of 6 non-wedge spaces)
-  const wedge = Array.from({ length: 6 }); // 6 wedge spaces on the outer wheel
+  const { gameState } = useGameContext();
+  const [availableSpaces, setAvailableSpaces] = useState([]);
+
+  const spokes = useMemo(() => Array.from({ length: 6 }), []); // 6 spokes
+  const outerNonWedge = useMemo(() => Array.from({ length: 36 }), []); // 36 non-wedge spaces on the outer wheel (6 groups of 6 non-wedge spaces)
+  const wedge = useMemo(() => Array.from({ length: 6 }), []); // 6 wedge spaces on the outer wheel
 
   function hexagonPoints(cx, cy, r) {
     let points = [];
@@ -41,15 +47,14 @@ export default function GameBoard() {
     console.log(spaceId);
   }
 
-  // Player Tokens
-
+  // TODO: function calculateAvailableSpaces(currentPosition, diceValue) {}
   return (
-    <div className="w-full h-full flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center relative">
       <svg
         viewBox="-25 -25 350 350"
         className="w-full h-full max-w-full max-h-full"
       >
-        {/* Outer circle (Wheel) - Non-Wedge Spaces */}
+        {/* Outer circle (Wheel) - Non-Wedge & Roll-Again Spaces */}
         {outerNonWedge.map((_, index) => {
           const groupIndex = Math.floor(index / 6);
           const spaceIndex = index % 6;
@@ -59,18 +64,20 @@ export default function GameBoard() {
             (groupIndex * 60 + (spaceIndex + 1) * 7.5 + 7.5) * (Math.PI / 180);
           const points = trapezoidPoints(150, 150, 140, 170, angle1, angle2);
           const centroid = getCentroid(points);
-          const rollAgain = [
-            1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34,
-          ].includes(index);
+          const rollAgain = (index + 2) % 3 === 0;
           const angle =
             (groupIndex * 60 + spaceIndex * 7.5 + 11.25) * (Math.PI / 180);
+
+          const isAvailable = availableSpaces.includes(`O${index}`);
 
           if (!rollAgain) {
             return (
               // Outer circle - Non-Wedge Spaces
               <g
                 key={index}
-                className="space outer-nonwedge"
+                className={`space outer-nonwedge border ${
+                  gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
+                }`}
                 id={`O${index}`}
                 onClick={() => onSpaceClick(`O${index}`)}
               >
@@ -85,6 +92,31 @@ export default function GameBoard() {
                 >
                   {`O${index}`}
                 </text>
+                {gameState.players.map((player) =>
+                  player.position === `O${index}` ? (
+                    <g key={player.name}>
+                      <circle
+                        cx={centroid.x}
+                        cy={centroid.y}
+                        r={10}
+                        fill={COLORS[player.color].hex}
+                        stroke="white"
+                        strokeWidth={2}
+                      />
+                      <text
+                        x={centroid.x}
+                        y={centroid.y}
+                        fontSize="10"
+                        fontWeight={600}
+                        textAnchor="middle"
+                        alignmentBaseline="middle"
+                        fill="white"
+                      >
+                        {player.name.charAt(0).toUpperCase()}
+                      </text>
+                    </g>
+                  ) : null
+                )}
               </g>
             );
           } else {
@@ -92,7 +124,9 @@ export default function GameBoard() {
             return (
               <g
                 key={index}
-                className="space roll-again"
+                className={`space roll-again ${
+                  gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
+                }`}
                 id={`O${index}`}
                 onClick={() => onSpaceClick("roll-again")}
               >
@@ -115,6 +149,31 @@ export default function GameBoard() {
                     Again
                   </tspan>
                 </text>
+                {gameState.players.map((player) =>
+                  player.position === `O${index}` ? (
+                    <g key={player.name}>
+                      <circle
+                        cx={centroid.x}
+                        cy={centroid.y}
+                        r={10}
+                        fill={COLORS[player.color].hex}
+                        stroke="white"
+                        strokeWidth={2}
+                      />
+                      <text
+                        x={centroid.x}
+                        y={centroid.y}
+                        fontSize="10"
+                        fontWeight={600}
+                        textAnchor="middle"
+                        alignmentBaseline="middle"
+                        fill="white"
+                      >
+                        {player.name.charAt(0).toUpperCase()}
+                      </text>
+                    </g>
+                  ) : null
+                )}
               </g>
             );
           }
@@ -125,10 +184,13 @@ export default function GameBoard() {
           const angle2 = (index * 60 + 7.5) * (Math.PI / 180);
           const points = trapezoidPoints(150, 150, 140, 170, angle1, angle2);
           const centroid = getCentroid(points);
+          const isAvailable = availableSpaces.includes(`W${index}`);
           return (
             <g
               key={index}
-              className="space outer-wedge"
+              className={`space outer-wedge ${
+                gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
+              }`}
               id={`W${index}`}
               onClick={() => onSpaceClick(`W${index}`)}
             >
@@ -143,14 +205,45 @@ export default function GameBoard() {
               >
                 W{index}
               </text>
+              {gameState.players.map((player) =>
+                player.position === `W${index}` ? (
+                  <g key={player.name}>
+                    <circle
+                      cx={centroid.x}
+                      cy={centroid.y}
+                      r={10}
+                      fill={COLORS[player.color].hex}
+                      stroke="white"
+                      strokeWidth={2}
+                    />
+                    <text
+                      x={centroid.x}
+                      y={centroid.y}
+                      fontSize="10"
+                      fontWeight={600}
+                      textAnchor="middle"
+                      alignmentBaseline="middle"
+                      fill="white"
+                    >
+                      {player.name.charAt(0).toUpperCase()}
+                    </text>
+                  </g>
+                ) : null
+              )}
             </g>
           );
         })}
-        {/* Center Hub */}
+        {/* Central Hub */}
         <g
-          className="space center-hub"
-          id="center-hub"
-          onClick={() => onSpaceClick("center-hub")}
+          className={`space central-hub ${
+            gameState.isStarted
+              ? availableSpaces.includes("central-hub")
+                ? "highlight"
+                : "dim"
+              : ""
+          }`}
+          id="central-hub"
+          onClick={() => onSpaceClick("central-hub")}
         >
           <polygon points={hexagonPoints(150, 150, 35)} fill="#002f58" />
           <image
@@ -160,6 +253,20 @@ export default function GameBoard() {
             x={125.2}
             y={125}
           />
+          {gameState.players.map(
+            (player) =>
+              player.position === "central-hub" && (
+                <circle
+                  key={player.name}
+                  cx={150}
+                  cy={150}
+                  r={10}
+                  fill={COLORS[player.color].hex}
+                  stroke="white"
+                  strokeWidth={2}
+                />
+              )
+          )}
         </g>
         {/* Spoke Spaces */}
         {spokes.map((_, index) => {
@@ -177,10 +284,15 @@ export default function GameBoard() {
               (width + gap) * squareIndex * Math.sin((angle * Math.PI) / 180);
             const rectX = x + xOffset - width / 2;
             const rectY = y + yOffset - height / 2;
+            const isAvailable = availableSpaces.includes(
+              `S${index}-${squareIndex}`
+            );
             return (
               <g
                 key={`${index}-${squareIndex}`}
-                className="space spoke"
+                className={`space spoke ${
+                  gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
+                }`}
                 id={`S${index}-${squareIndex}`}
                 onClick={() => onSpaceClick(`S${index}-${squareIndex}`)}
               >
@@ -202,6 +314,32 @@ export default function GameBoard() {
                 >
                   S{index}-{squareIndex}
                 </text>
+                {gameState.players.map((player) =>
+                  player.position === `S${index}-${squareIndex}` ? (
+                    <g key={player.name}>
+                      <circle
+                        key={player.name}
+                        cx={rectX + width / 2}
+                        cy={rectY + height / 2}
+                        r={10}
+                        fill={COLORS[player.color].hex}
+                        stroke="white"
+                        strokeWidth={2}
+                      />
+                      <text
+                        x={rectX + width / 2}
+                        y={rectY + height / 2}
+                        fontSize="10"
+                        fontWeight={600}
+                        textAnchor="middle"
+                        alignmentBaseline="middle"
+                        fill="white"
+                      >
+                        {player.name.charAt(0).toUpperCase()}
+                      </text>
+                    </g>
+                  ) : null
+                )}
               </g>
             );
           });
