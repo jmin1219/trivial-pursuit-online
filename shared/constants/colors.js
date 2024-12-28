@@ -9,7 +9,7 @@ export const COLORS = {
   },
   yellow: {
     category: "History",
-    hex: "#FFFF00",
+    hex: "#e8e800",
   },
   orange: {
     category: "Sports & Leisure",

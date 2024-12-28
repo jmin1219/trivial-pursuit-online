@@ -92,31 +92,37 @@ export default function GameBoard() {
                 >
                   {`O${index}`}
                 </text>
-                {gameState.players.map((player) =>
-                  player.position === `O${index}` ? (
-                    <g key={player.name}>
-                      <circle
-                        cx={centroid.x}
-                        cy={centroid.y}
-                        r={10}
-                        fill={COLORS[player.color].hex}
-                        stroke="white"
-                        strokeWidth={2}
-                      />
-                      <text
-                        x={centroid.x}
-                        y={centroid.y}
-                        fontSize="10"
-                        fontWeight={600}
-                        textAnchor="middle"
-                        alignmentBaseline="middle"
-                        fill="white"
-                      >
-                        {player.name.charAt(0).toUpperCase()}
-                      </text>
-                    </g>
-                  ) : null
-                )}
+                {gameState.players
+                  .filter((player) => player.position === `O${index}`)
+                  .map((player, i, arr) => {
+                    const offset = (i - (arr.length - 1) / 2) * 10;
+                    const angleRad = (groupIndex * 60 * Math.PI) / 180;
+                    const offsetX = offset * Math.cos(angleRad);
+                    const offsetY = offset * Math.sin(angleRad);
+                    return (
+                      <g key={player.name}>
+                        <circle
+                          cx={centroid.x - offsetX}
+                          cy={centroid.y - offsetY}
+                          r={8}
+                          fill={COLORS[player.color].hex}
+                          stroke="black"
+                          strokeWidth={2}
+                        />
+                        <text
+                          x={centroid.x - offsetX}
+                          y={centroid.y - offsetY}
+                          fontSize="10"
+                          fontWeight={600}
+                          textAnchor="middle"
+                          alignmentBaseline="middle"
+                          fill="white"
+                        >
+                          {player.name.charAt(0).toUpperCase()}
+                        </text>
+                      </g>
+                    );
+                  })}
               </g>
             );
           } else {
@@ -157,7 +163,7 @@ export default function GameBoard() {
                         cy={centroid.y}
                         r={10}
                         fill={COLORS[player.color].hex}
-                        stroke="white"
+                        stroke="black"
                         strokeWidth={2}
                       />
                       <text
@@ -205,34 +211,41 @@ export default function GameBoard() {
               >
                 W{index}
               </text>
-              {gameState.players.map((player) =>
-                player.position === `W${index}` ? (
-                  <g key={player.name}>
-                    <circle
-                      cx={centroid.x}
-                      cy={centroid.y}
-                      r={10}
-                      fill={COLORS[player.color].hex}
-                      stroke="white"
-                      strokeWidth={2}
-                    />
-                    <text
-                      x={centroid.x}
-                      y={centroid.y}
-                      fontSize="10"
-                      fontWeight={600}
-                      textAnchor="middle"
-                      alignmentBaseline="middle"
-                      fill="white"
-                    >
-                      {player.name.charAt(0).toUpperCase()}
-                    </text>
-                  </g>
-                ) : null
-              )}
+              {gameState.players
+                .filter((player) => player.position === `W${index}`)
+                .map((player, i, arr) => {
+                  const offset = (i - (arr.length - 1) / 2) * 10;
+                  const angleRad = ((index * 60 + 90) * Math.PI) / 180;
+                  const offsetX = offset * Math.cos(angleRad);
+                  const offsetY = offset * Math.sin(angleRad);
+                  return (
+                    <g key={player.name}>
+                      <circle
+                        cx={centroid.x - offsetX}
+                        cy={centroid.y - offsetY}
+                        r={8}
+                        fill={COLORS[player.color].hex}
+                        stroke="black"
+                        strokeWidth={2}
+                      />
+                      <text
+                        x={centroid.x - offsetX}
+                        y={centroid.y - offsetY}
+                        fontSize="10"
+                        fontWeight={600}
+                        textAnchor="middle"
+                        alignmentBaseline="middle"
+                        fill="white"
+                      >
+                        {player.name.charAt(0).toUpperCase()}
+                      </text>
+                    </g>
+                  );
+                })}
             </g>
           );
         })}
+
         {/* Central Hub */}
         <g
           className={`space central-hub ${
@@ -253,21 +266,39 @@ export default function GameBoard() {
             x={125.2}
             y={125}
           />
-          {gameState.players.map(
-            (player) =>
-              player.position === "central-hub" && (
-                <circle
-                  key={player.name}
-                  cx={150}
-                  cy={150}
-                  r={10}
-                  fill={COLORS[player.color].hex}
-                  stroke="white"
-                  strokeWidth={2}
-                />
-              )
-          )}
+          {gameState.players
+            .filter((player) => player.position === "central-hub")
+            .map((player, i, arr) => {
+              const angle = (i / arr.length) * 2 * Math.PI;
+              const radius = arr.length > 1 ? 15 : 10;
+              const offsetX = radius * Math.cos(angle);
+              const offsetY = radius * Math.sin(angle);
+              return (
+                <g key={player.name}>
+                  <circle
+                    cx={150 + offsetX}
+                    cy={150 + offsetY}
+                    r={radius > 10 ? 10 : radius}
+                    fill={COLORS[player.color].hex}
+                    stroke="black"
+                    strokeWidth={2}
+                  />
+                  <text
+                    x={150 + offsetX}
+                    y={150 + offsetY}
+                    fontSize="10"
+                    fontWeight={600}
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                    fill="white"
+                  >
+                    {player.name.charAt(0).toUpperCase()}
+                  </text>
+                </g>
+              );
+            })}
         </g>
+
         {/* Spoke Spaces */}
         {spokes.map((_, index) => {
           const angle = (360 / spokes.length) * index;
@@ -314,32 +345,39 @@ export default function GameBoard() {
                 >
                   S{index}-{squareIndex}
                 </text>
-                {gameState.players.map((player) =>
-                  player.position === `S${index}-${squareIndex}` ? (
-                    <g key={player.name}>
-                      <circle
-                        key={player.name}
-                        cx={rectX + width / 2}
-                        cy={rectY + height / 2}
-                        r={10}
-                        fill={COLORS[player.color].hex}
-                        stroke="white"
-                        strokeWidth={2}
-                      />
-                      <text
-                        x={rectX + width / 2}
-                        y={rectY + height / 2}
-                        fontSize="10"
-                        fontWeight={600}
-                        textAnchor="middle"
-                        alignmentBaseline="middle"
-                        fill="white"
-                      >
-                        {player.name.charAt(0).toUpperCase()}
-                      </text>
-                    </g>
-                  ) : null
-                )}
+                {gameState.players
+                  .filter(
+                    (player) => player.position === `S${index}-${squareIndex}`
+                  )
+                  .map((player, i, arr) => {
+                    const offset = (i - (arr.length - 1) / 2) * 10;
+                    const angleRad = ((angle + 90) * Math.PI) / 180;
+                    const offsetX = offset * Math.cos(angleRad);
+                    const offsetY = offset * Math.sin(angleRad);
+                    return (
+                      <g key={player.name}>
+                        <circle
+                          cx={rectX + width / 2 + offsetX}
+                          cy={rectY + height / 2 + offsetY}
+                          r={8}
+                          fill={COLORS[player.color].hex}
+                          stroke="black"
+                          strokeWidth={1.5}
+                        />
+                        <text
+                          x={rectX + width / 2 + offsetX}
+                          y={rectY + height / 2 + offsetY}
+                          fontSize="10"
+                          fontWeight={600}
+                          textAnchor="middle"
+                          alignmentBaseline="middle"
+                          fill="white"
+                        >
+                          {player.name.charAt(0).toUpperCase()}
+                        </text>
+                      </g>
+                    );
+                  })}
               </g>
             );
           });
