@@ -114,8 +114,12 @@ export const gameSocketHandlers = (socket, io) => {
 
   socket.on("move-player", async ({ gameId, spaceId }) => {
     try {
-      const game = await GameService.movePlayer(gameId, spaceId);
+      const { game, randomQuestion } = await GameService.movePlayer(
+        gameId,
+        spaceId
+      );
       io.to(game.gameId).emit("updated-game-state", game);
+      io.to(game.gameId).emit("new-question", randomQuestion);
     } catch (error) {
       console.error(`Error moving player (gameSocketHandlers.js): ${error}`);
     }

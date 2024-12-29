@@ -9,6 +9,8 @@ export const useGameContext = () => useContext(GameContext);
 
 export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState({});
+  const [isChoosingSpace, setIsChoosingSpace] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
   const { gameId } = useParams();
   const navigate = useNavigate();
 
@@ -56,6 +58,10 @@ export const GameProvider = ({ children }) => {
       localStorage.removeItem("player-data");
       navigate("/");
     });
+    clientSocket.on("new-question", (question) => {
+      console.log("New question received: ", question);
+      setCurrentQuestion(question);
+    });
     return () => {
       clientSocket.off("connect");
       clientSocket.off("update-game-state");
@@ -74,6 +80,7 @@ export const GameProvider = ({ children }) => {
   };
 
   const requestRollDice = (gameState, playerData) => {
+    setIsChoosingSpace(true);
     clientSocket.emit("request-roll-dice", { gameState, playerData });
   };
 
@@ -94,6 +101,8 @@ export const GameProvider = ({ children }) => {
         requestRollDice,
         leaveGame,
         movePlayer,
+        isChoosingSpace,
+        currentQuestion,
       }}
     >
       {children}

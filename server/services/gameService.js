@@ -1,6 +1,14 @@
 // Desc: Service for handling game logic
-
 import { Game, Player } from "../config/models/GameSchema.js";
+import fs from "fs";
+import path from "path";
+
+const triviaQuestions = JSON.parse(
+  fs.readFileSync(
+    path.resolve(`../server/config/TriviaQuestions.json`),
+    `utf-8`
+  )
+);
 
 const generateGameId = async () => {
   let gameId;
@@ -16,6 +24,17 @@ const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
+const getRandomQuestionId = (usedQuestionIds) => {
+  const randomQuestionId =
+    Math.floor(Math.random() * triviaQuestions.length) + 1;
+  if (usedQuestionIds.includes(randomQuestionId)) {
+    return getRandomQuestion(usedQuestionIds);
+  } else {
+    usedQuestionIds.push(randomQuestionId);
+    return randomQuestionId;
   }
 };
 
@@ -133,10 +152,20 @@ export const GameService = {
     const currentPlayer = game.players[game.currentTurnIndex];
     currentPlayer.position = spaceId;
     await currentPlayer.save();
-    game.currentTurnIndex = (game.currentTurnIndex + 1) % game.players.length;
     game.availableSpaces = [];
+
+    // TODO: Check if player has landed on a question space
+
+    // Select a random question from the database
+    // TODO: Filter based on spaceId
+    const randomQuestion =
+      triviaQuestions[getRandomQuestionId(game.usedQuestionIds)];
+
+    // Add question to usedQuestionIds
+    game.usedQuestionIds.push(randomQuestion.id);
     await game.save();
-    return game;
+
+    return { game, randomQuestion };
   },
 
   getChatLog: async (gameId) => {

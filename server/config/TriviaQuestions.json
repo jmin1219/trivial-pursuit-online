@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "question": "What is the capital of France?",
+    "answer": "Paris",
+    "category": "blue"
+  },
+  {
+    "id": 2,
+    "question": "Who painted the Mona Lisa?",
+    "answer": "Leonardo da Vinci",
+    "category": "purple"
+  },
+  {
+    "id": 3,
+    "question": "What is the chemical symbol for water?",
+    "answer": "H2O",
+    "category": "green"
+  },
+  {
+    "id": 4,
+    "question": "In which year did the Titanic sink?",
+    "answer": "1912",
+    "category": "yellow"
+  },
+  {
+    "id": 5,
+    "question": "Which sport is known as the 'king of sports'?",
+    "answer": "Soccer",
+    "category": "orange"
+  },
+  {
+    "id": 6,
+    "question": "Who won the first Academy Award for Best Actor?",
+    "answer": "Emil Jannings",
+    "category": "pink"
+  },
+  {
+    "id": 7,
+    "question": "What is the largest planet in our solar system?",
+    "answer": "Jupiter",
+    "category": "blue"
+  },
+  {
+    "id": 8,
+    "question": "Who wrote 'To Kill a Mockingbird'?",
+    "answer": "Harper Lee",
+    "category": "purple"
+  },
+  {
+    "id": 9,
+    "question": "What is the hardest natural substance on Earth?",
+    "answer": "Diamond",
+    "category": "green"
+  },
+  {
+    "id": 10,
+    "question": "Who was the first President of the United States?",
+    "answer": "George Washington",
+    "category": "yellow"
+  },
+  {
+    "id": 11,
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "answer": "Japan",
+    "category": "orange"
+  },
+  {
+    "id": 12,
+    "question": "What is the smallest country in the world?",
+    "answer": "Vatican City",
+    "category": "pink"
+  },
+  {
+    "id": 13,
+    "question": "What is the main ingredient in guacamole?",
+    "answer": "Avocado",
+    "category": "blue"
+  },
+  {
+    "id": 14,
+    "question": "Who wrote the play 'Romeo and Juliet'?",
+    "answer": "William Shakespeare",
+    "category": "purple"
+  },
+  {
+    "id": 15,
+    "question": "What is the chemical symbol for gold?",
+    "answer": "Au",
+    "category": "green"
+  },
+  {
+    "id": 16,
+    "question": "In which year did World War II end?",
+    "answer": "1945",
+    "category": "yellow"
+  },
+  {
+    "id": 17,
+    "question": "Which planet is known as the Red Planet?",
+    "answer": "Mars",
+    "category": "orange"
+  },
+  {
+    "id": 18,
+    "question": "Who is the author of the Harry Potter series?",
+    "answer": "J.K. Rowling",
+    "category": "pink"
+  },
+  {
+    "id": 19,
+    "question": "What is the tallest mountain in the world?",
+    "answer": "Mount Everest",
+    "category": "blue"
+  },
+  {
+    "id": 20,
+    "question": "Who painted the ceiling of the Sistine Chapel?",
+    "answer": "Michelangelo",
+    "category": "purple"
+  },
+  {
+    "id": 21,
+    "question": "What is the chemical symbol for sodium?",
+    "answer": "Na",
+    "category": "green"
+  },
+  {
+    "id": 22,
+    "question": "In which year did the Berlin Wall fall?",
+    "answer": "1989",
+    "category": "yellow"
+  },
+  {
+    "id": 23,
+    "question": "Which country is known for the maple leaf?",
+    "answer": "Canada",
+    "category": "orange"
+  },
+  {
+    "id": 24,
+    "question": "Who is known as the 'Father of Computers'?",
+    "answer": "Charles Babbage",
+    "category": "pink"
+  },
+  {
+    "id": 25,
+    "question": "What is the longest river in the world?",
+    "answer": "Nile",
+    "category": "blue"
+  },
+  {
+    "id": 26,
+    "question": "Who wrote 'Pride and Prejudice'?",
+    "answer": "Jane Austen",
+    "category": "purple"
+  },
+  {
+    "id": 27,
+    "question": "What is the chemical symbol for iron?",
+    "answer": "Fe",
+    "category": "green"
+  },
+  {
+    "id": 28,
+    "question": "In which year did the first man land on the moon?",
+    "answer": "1969",
+    "category": "yellow"
+  },
+  {
+    "id": 29,
+    "question": "Which country is known for the Eiffel Tower?",
+    "answer": "France",
+    "category": "orange"
+  },
+  {
+    "id": 30,
+    "question": "Who is the author of '1984'?",
+    "answer": "George Orwell",
+    "category": "pink"
+  }
+]

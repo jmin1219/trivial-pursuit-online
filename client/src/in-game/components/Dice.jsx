@@ -7,13 +7,16 @@ import dice6 from "../../assets/dice/dice6.png";
 import { useGameContext } from "../../context/GameContext";
 
 export default function Dice() {
-  const { gameState, requestRollDice } = useGameContext();
+  const { gameState, requestRollDice, isChoosingSpace } = useGameContext();
   const { diceState } = gameState;
   const diceImages = [dice1, dice2, dice3, dice4, dice5, dice6];
   const playerData = JSON.parse(localStorage.getItem("player-data"));
 
   const handleRollDice = () => {
     if (diceState.isShuffling) return;
+    if (isChoosingSpace) {
+      return alert("You already rolled the dice. Please choose a space.");
+    }
     if (
       gameState.players[gameState.currentTurnIndex].name !== playerData.name
     ) {

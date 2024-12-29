@@ -3,9 +3,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { COLORS } from "../../../../shared/constants/colors";
 import { useGameContext } from "../../context/GameContext";
 import { hexagonPoints, trapezoidPoints, getCentroid } from "@/lib/geometry";
+import TriviaCard from "./TriviaCard";
 
 export default function GameBoard() {
-  const { gameState, movePlayer } = useGameContext();
+  const { gameState, movePlayer, currentQuestion } = useGameContext();
   const [availableSpaces, setAvailableSpaces] = useState([]);
 
   const spokes = useMemo(() => Array.from({ length: 6 }), []); // 6 spokes
@@ -498,6 +499,11 @@ export default function GameBoard() {
           });
         })}
       </svg>
+      {currentQuestion && (
+        <div className="w-full flex absolute justify-center items-center">
+          <TriviaCard />
+        </div>
+      )}
     </div>
   );
 }
