@@ -1,20 +1,3 @@
-.dim {
-  opacity: 0.3;
-}
-
-.dim-token {
-  opacity: 0.5
-}
-
-.highlight {
-  opacity: 1;
-}
-
-.highlight:hover {
-  border: 2px solid darkblue
-}
-
-
 /* SPACE COLORS */
 #W4,
 #O5,

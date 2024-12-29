@@ -115,6 +115,7 @@ export const GameService = {
   calculateAvailableSpaces: async (game, currentPosition, diceValue) => {
     const availableSpaces = [];
 
+    // TODO: Implement logic for calculating available spaces based on current position and dice value
     if (currentPosition === "central-hub") {
       for (let i = 0; i < 6; i++) {
         diceValue < 6
@@ -123,6 +124,17 @@ export const GameService = {
       }
     }
     game.availableSpaces = availableSpaces;
+    await game.save();
+    return game;
+  },
+
+  movePlayer: async (gameId, spaceId) => {
+    const game = await Game.findOne({ gameId }).populate("players");
+    const currentPlayer = game.players[game.currentTurnIndex];
+    currentPlayer.position = spaceId;
+    await currentPlayer.save();
+    game.currentTurnIndex = (game.currentTurnIndex + 1) % game.players.length;
+    game.availableSpaces = [];
     await game.save();
     return game;
   },

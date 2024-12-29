@@ -81,6 +81,10 @@ export const GameProvider = ({ children }) => {
     clientSocket.emit("leave-game", playerData);
   };
 
+  const movePlayer = (gameId, spaceId) => {
+    clientSocket.emit("move-player", { gameId, spaceId });
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -89,6 +93,7 @@ export const GameProvider = ({ children }) => {
         startGame,
         requestRollDice,
         leaveGame,
+        movePlayer,
       }}
     >
       {children}
