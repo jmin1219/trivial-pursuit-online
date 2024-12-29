@@ -98,7 +98,17 @@ export const gameSocketHandlers = (socket, io) => {
         finalDiceValue,
         prompt
       );
-      io.to(gameState.gameId).emit("updated-game-state", newGameState);
+
+      const currentPlayer = newGameState.players.find(
+        (player) => player.name === playerData.name
+      );
+      const finalGameState = await GameService.calculateAvailableSpaces(
+        newGameState,
+        currentPlayer.position,
+        finalDiceValue
+      );
+
+      io.to(gameState.gameId).emit("updated-game-state", finalGameState);
     }, 1500);
   });
 };

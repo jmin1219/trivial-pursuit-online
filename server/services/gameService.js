@@ -66,7 +66,7 @@ export const GameService = {
     // Set dice prompt for first player
     game.diceState.dicePrompt = `${
       game.players[game.currentTurnIndex].name
-    }'s turn to roll!`;
+    }'s turn to roll! Click the Dice to roll.`;
     await game.save();
     return game;
   },
@@ -110,6 +110,21 @@ export const GameService = {
     game.diceState.isShuffling = false;
     await game.save();
     return game.populate("players");
+  },
+
+  calculateAvailableSpaces: async (game, currentPosition, diceValue) => {
+    const availableSpaces = [];
+
+    if (currentPosition === "central-hub") {
+      for (let i = 0; i < 6; i++) {
+        diceValue < 6
+          ? availableSpaces.push(`S${i}-${diceValue - 1}`)
+          : availableSpaces.push(`W${i}`);
+      }
+    }
+    game.availableSpaces = availableSpaces;
+    await game.save();
+    return game;
   },
 
   getChatLog: async (gameId) => {

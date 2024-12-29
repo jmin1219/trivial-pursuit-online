@@ -1,7 +1,8 @@
 import "../styles/GameBoard.css";
-import { useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { COLORS } from "../../../../shared/constants/colors";
 import { useGameContext } from "../../context/GameContext";
+import { hexagonPoints, trapezoidPoints, getCentroid } from "@/lib/geometry";
 
 export default function GameBoard() {
   const { gameState } = useGameContext();
@@ -11,43 +12,12 @@ export default function GameBoard() {
   const outerNonWedge = useMemo(() => Array.from({ length: 36 }), []); // 36 non-wedge spaces on the outer wheel (6 groups of 6 non-wedge spaces)
   const wedge = useMemo(() => Array.from({ length: 6 }), []); // 6 wedge spaces on the outer wheel
 
-  function hexagonPoints(cx, cy, r) {
-    let points = [];
-    for (let i = 0; i < 6; i++) {
-      const angle = (Math.PI / 3) * i + (30 * Math.PI) / 180;
-      const x = cx + r * Math.cos(angle);
-      const y = cy + r * Math.sin(angle);
-      points.push(`${x},${y}`);
+  useEffect(() => {
+    if (gameState.isStarted && gameState.availableSpaces) {
+      setAvailableSpaces(gameState.availableSpaces);
     }
-    return points.join(" ");
-  }
+  }, [gameState.isStarted, gameState.availableSpaces]);
 
-  function trapezoidPoints(cx, cy, r1, r2, angle1, angle2) {
-    const x1 = cx + r1 * Math.cos(angle1);
-    const y1 = cx + r1 * Math.sin(angle1);
-    const x2 = cx + r1 * Math.cos(angle2);
-    const y2 = cx + r1 * Math.sin(angle2);
-    const x3 = cx + r2 * Math.cos(angle2);
-    const y3 = cy + r2 * Math.sin(angle2);
-    const x4 = cx + r2 * Math.cos(angle1);
-    const y4 = cy + r2 * Math.sin(angle1);
-    return `${x1},${y1} ${x2},${y2} ${x3},${y3} ${x4},${y4}`;
-  }
-
-  function getCentroid(points) {
-    const coords = points
-      .split(" ")
-      .map((point) => point.split(",").map(Number));
-    const x = coords.reduce((sum, [x]) => sum + x, 0) / coords.length;
-    const y = coords.reduce((sum, [, y]) => sum + y, 0) / coords.length;
-    return { x, y };
-  }
-
-  function onSpaceClick(spaceId) {
-    console.log(spaceId);
-  }
-
-  // TODO: function calculateAvailableSpaces(currentPosition, diceValue) {}
   return (
     <div className="w-full h-full flex justify-center items-center relative">
       <svg
@@ -72,26 +42,41 @@ export default function GameBoard() {
 
           if (!rollAgain) {
             return (
-              // Outer circle - Non-Wedge Spaces
-              <g
-                key={index}
-                className={`space outer-nonwedge border ${
-                  gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
-                }`}
-                id={`O${index}`}
-                onClick={() => onSpaceClick(`O${index}`)}
-              >
-                <polygon points={points} stroke="white" />
-                <text
-                  x={centroid.x}
-                  y={centroid.y}
-                  fontSize="8"
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                  fill="white"
+              <React.Fragment key={`O${index}`}>
+                {/* Outer circle - Non-Wedge Spaces */}
+                <g
+                  key={index}
+                  id={`O${index}`}
+                  onMouseEnter={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "darkblyue";
+                      e.target.style.strokeWidth = 4;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "blue";
+                      e.target.style.strokeWidth = 2;
+                    }
+                  }}
                 >
-                  {`O${index}`}
-                </text>
+                  <polygon
+                    points={points}
+                    stroke={isAvailable ? "blue" : "white"}
+                    strokeWidth={isAvailable ? 2 : 1}
+                    style={{
+                      opacity: gameState.isStarted
+                        ? isAvailable
+                          ? 1
+                          : 0.3
+                        : 1,
+                      cursor:
+                        isAvailable && gameState.isStarted
+                          ? "pointer"
+                          : "default",
+                    }}
+                  />
+                </g>
                 {gameState.players
                   .filter((player) => player.position === `O${index}`)
                   .map((player, i, arr) => {
@@ -99,8 +84,12 @@ export default function GameBoard() {
                     const angleRad = (groupIndex * 60 * Math.PI) / 180;
                     const offsetX = offset * Math.cos(angleRad);
                     const offsetY = offset * Math.sin(angleRad);
+                    const isTurn = gameState.currentTurnIndex === i;
                     return (
-                      <g key={player.name}>
+                      <g
+                        key={player.name}
+                        className={gameState.isStarted ? isTurn && "dim" : ""}
+                      >
                         <circle
                           cx={centroid.x - offsetX}
                           cy={centroid.y - offsetY}
@@ -123,64 +112,88 @@ export default function GameBoard() {
                       </g>
                     );
                   })}
-              </g>
+              </React.Fragment>
             );
           } else {
             // Outer circle - Roll Again Spaces
             return (
-              <g
-                key={index}
-                className={`space roll-again ${
-                  gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
-                }`}
-                id={`O${index}`}
-                onClick={() => onSpaceClick("roll-again")}
-              >
-                <polygon points={points} stroke="white" fill="lightgray" />
-                <text
-                  x={centroid.x}
-                  y={centroid.y}
-                  fontSize="7"
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                  fill="black"
-                  transform={`rotate(${angle * (180 / Math.PI) - 90}, ${
-                    centroid.x
-                  }, ${centroid.y})`}
+              <React.Fragment key={`O${index}`}>
+                <g
+                  key={index}
+                  id={`O${index}`}
+                  onMouseEnter={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "darkblyue";
+                      e.target.style.strokeWidth = 4;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "blue";
+                      e.target.style.strokeWidth = 2;
+                    }
+                  }}
                 >
-                  <tspan x={centroid.x} dy="-0.1em">
-                    Roll
-                  </tspan>
-                  <tspan x={centroid.x} dy="1em">
-                    Again
-                  </tspan>
-                </text>
-                {gameState.players.map((player) =>
-                  player.position === `O${index}` ? (
-                    <g key={player.name}>
-                      <circle
-                        cx={centroid.x}
-                        cy={centroid.y}
-                        r={10}
-                        fill={COLORS[player.color].hex}
-                        stroke="black"
-                        strokeWidth={2}
-                      />
-                      <text
-                        x={centroid.x}
-                        y={centroid.y}
-                        fontSize="10"
-                        fontWeight={600}
-                        textAnchor="middle"
-                        alignmentBaseline="middle"
-                        fill="white"
-                      >
-                        {player.name.charAt(0).toUpperCase()}
-                      </text>
-                    </g>
-                  ) : null
+                  <polygon
+                    points={points}
+                    fill="lightgray"
+                    stroke={isAvailable ? "blue" : "white"}
+                    strokeWidth={isAvailable ? 2 : 1}
+                    style={{
+                      opacity: gameState.isStarted
+                        ? isAvailable
+                          ? 1
+                          : 0.3
+                        : 1,
+                      cursor: isAvailable ? "pointer" : "default",
+                    }}
+                  />
+                  <text
+                    x={centroid.x}
+                    y={centroid.y}
+                    fontSize="7"
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                    fill="black"
+                    transform={`rotate(${angle * (180 / Math.PI) - 90}, ${
+                      centroid.x
+                    }, ${centroid.y})`}
+                  >
+                    <tspan x={centroid.x} dy="-0.1em">
+                      Roll
+                    </tspan>
+                    <tspan x={centroid.x} dy="1em">
+                      Again
+                    </tspan>
+                  </text>
+                </g>
+                {gameState.players.map(
+                  (player) =>
+                    player.position === `O${index}` && (
+                      <g key={player.name}>
+                        <circle
+                          cx={centroid.x}
+                          cy={centroid.y}
+                          r={10}
+                          fill={COLORS[player.color].hex}
+                          stroke="black"
+                          strokeWidth={2}
+                        />
+                        <text
+                          x={centroid.x}
+                          y={centroid.y}
+                          fontSize="10"
+                          fontWeight={600}
+                          textAnchor="middle"
+                          alignmentBaseline="middle"
+                          fill="white"
+                        >
+                          {player.name.charAt(0).toUpperCase()}
+                        </text>
+                      </g>
+                    )
                 )}
-              </g>
+              </React.Fragment>
             );
           }
         })}
@@ -192,25 +205,34 @@ export default function GameBoard() {
           const centroid = getCentroid(points);
           const isAvailable = availableSpaces.includes(`W${index}`);
           return (
-            <g
-              key={index}
-              className={`space outer-wedge ${
-                gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
-              }`}
-              id={`W${index}`}
-              onClick={() => onSpaceClick(`W${index}`)}
-            >
-              <polygon points={points} stroke="white" />
-              <text
-                x={centroid.x}
-                y={centroid.y}
-                fill="white"
-                fontSize="8"
-                textAnchor="middle"
-                alignmentBaseline="middle"
+            <React.Fragment key={`W${index}`}>
+              <g
+                key={index}
+                id={`W${index}`}
+                onMouseEnter={(e) => {
+                  if (isAvailable) {
+                    e.target.style.stroke = "darkblyue";
+                    e.target.style.strokeWidth = 4;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (isAvailable) {
+                    e.target.style.stroke = "blue";
+                    e.target.style.strokeWidth = 2;
+                  }
+                }}
               >
-                W{index}
-              </text>
+                <polygon
+                  points={points}
+                  stroke={isAvailable ? "blue" : "white"}
+                  strokeWidth={isAvailable ? 2 : 1}
+                  style={{
+                    opacity: gameState.isStarted ? (isAvailable ? 1 : 0.3) : 1,
+                    cursor: isAvailable ? "pointer" : "default",
+                  }}
+                />
+              </g>
+
               {gameState.players
                 .filter((player) => player.position === `W${index}`)
                 .map((player, i, arr) => {
@@ -218,8 +240,13 @@ export default function GameBoard() {
                   const angleRad = ((index * 60 + 90) * Math.PI) / 180;
                   const offsetX = offset * Math.cos(angleRad);
                   const offsetY = offset * Math.sin(angleRad);
+                  const isTurn = gameState.currentTurnIndex === i;
+
                   return (
-                    <g key={player.name}>
+                    <g
+                      key={player.name}
+                      className={gameState.isStarted ? !isTurn && "dim" : ""}
+                    >
                       <circle
                         cx={centroid.x - offsetX}
                         cy={centroid.y - offsetY}
@@ -242,22 +269,12 @@ export default function GameBoard() {
                     </g>
                   );
                 })}
-            </g>
+            </React.Fragment>
           );
         })}
 
         {/* Central Hub */}
-        <g
-          className={`space central-hub ${
-            gameState.isStarted
-              ? availableSpaces.includes("central-hub")
-                ? "highlight"
-                : "dim"
-              : ""
-          }`}
-          id="central-hub"
-          onClick={() => onSpaceClick("central-hub")}
-        >
+        <g id="central-hub">
           <polygon points={hexagonPoints(150, 150, 35)} fill="#002f58" />
           <image
             href="/src/assets/trivial-central-logo.png"
@@ -266,38 +283,43 @@ export default function GameBoard() {
             x={125.2}
             y={125}
           />
-          {gameState.players
-            .filter((player) => player.position === "central-hub")
-            .map((player, i, arr) => {
-              const angle = (i / arr.length) * 2 * Math.PI;
-              const radius = arr.length > 1 ? 15 : 10;
-              const offsetX = radius * Math.cos(angle);
-              const offsetY = radius * Math.sin(angle);
-              return (
-                <g key={player.name}>
-                  <circle
-                    cx={150 + offsetX}
-                    cy={150 + offsetY}
-                    r={radius > 10 ? 10 : radius}
-                    fill={COLORS[player.color].hex}
-                    stroke="black"
-                    strokeWidth={2}
-                  />
-                  <text
-                    x={150 + offsetX}
-                    y={150 + offsetY}
-                    fontSize="10"
-                    fontWeight={600}
-                    textAnchor="middle"
-                    alignmentBaseline="middle"
-                    fill="white"
-                  >
-                    {player.name.charAt(0).toUpperCase()}
-                  </text>
-                </g>
-              );
-            })}
         </g>
+        {gameState.players
+          .filter((player) => player.position === "central-hub")
+          .map((player, i, arr) => {
+            const angle = (i / arr.length) * 2 * Math.PI;
+            const radius = arr.length > 1 ? 15 : 10;
+            const offsetX = radius * Math.cos(angle);
+            const offsetY = radius * Math.sin(angle);
+            const isTurn = gameState.currentTurnIndex === i;
+            return (
+              <g
+                key={player.name}
+                className={gameState.isStarted ? !isTurn && "dim" : ""}
+              >
+                <circle
+                  cx={150 + offsetX}
+                  cy={150 + offsetY}
+                  r={radius > 10 ? 10 : radius}
+                  fill={COLORS[player.color].hex}
+                  stroke="black"
+                  strokeWidth={1.5}
+                />
+                <text
+                  x={150 + offsetX}
+                  y={150 + offsetY}
+                  fontSize="10"
+                  fontWeight={600}
+                  textAnchor="middle"
+                  alignmentBaseline="middle"
+                  fill="white"
+                  dy="0.1em"
+                >
+                  {player.name.charAt(0).toUpperCase()}
+                </text>
+              </g>
+            );
+          })}
 
         {/* Spoke Spaces */}
         {spokes.map((_, index) => {
@@ -319,32 +341,44 @@ export default function GameBoard() {
               `S${index}-${squareIndex}`
             );
             return (
-              <g
-                key={`${index}-${squareIndex}`}
-                className={`space spoke ${
-                  gameState.isStarted ? (isAvailable ? "highlight" : "dim") : ""
-                }`}
-                id={`S${index}-${squareIndex}`}
-                onClick={() => onSpaceClick(`S${index}-${squareIndex}`)}
-              >
-                <rect
-                  x={x + xOffset - width / 2}
-                  y={y + yOffset - height / 2}
-                  width={width}
-                  height={height}
-                  transform={`rotate(${angle}, ${x + xOffset}, ${y + yOffset})`}
-                  stroke="white"
-                />
-                <text
-                  x={rectX + width / 2}
-                  y={rectY + height / 2}
-                  fontSize="8"
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                  fill="white"
+              <React.Fragment key={`S${index}-${squareIndex}`}>
+                <g
+                  key={`${index}-${squareIndex}`}
+                  id={`S${index}-${squareIndex}`}
+                  onMouseEnter={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "darkblyue";
+                      e.target.style.strokeWidth = 4;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "blue";
+                      e.target.style.strokeWidth = 2;
+                    }
+                  }}
                 >
-                  S{index}-{squareIndex}
-                </text>
+                  <rect
+                    x={x + xOffset - width / 2}
+                    y={y + yOffset - height / 2}
+                    width={width}
+                    height={height}
+                    transform={`rotate(${angle}, ${x + xOffset}, ${
+                      y + yOffset
+                    })`}
+                    stroke={isAvailable ? "blue" : "white"}
+                    strokeWidth={isAvailable ? 2 : 0.5}
+                    style={{
+                      opacity: gameState.isStarted
+                        ? isAvailable
+                          ? 1
+                          : 0.3
+                        : 1,
+                      cursor: isAvailable ? "pointer" : "default",
+                    }}
+                  />
+                </g>
+
                 {gameState.players
                   .filter(
                     (player) => player.position === `S${index}-${squareIndex}`
@@ -354,8 +388,12 @@ export default function GameBoard() {
                     const angleRad = ((angle + 90) * Math.PI) / 180;
                     const offsetX = offset * Math.cos(angleRad);
                     const offsetY = offset * Math.sin(angleRad);
+                    const isTurn = gameState.currentTurnIndex === i;
                     return (
-                      <g key={player.name}>
+                      <g
+                        key={player.name}
+                        className={gameState.isStarted ? !isTurn && "dim" : ""}
+                      >
                         <circle
                           cx={rectX + width / 2 + offsetX}
                           cy={rectY + height / 2 + offsetY}
@@ -378,7 +416,7 @@ export default function GameBoard() {
                       </g>
                     );
                   })}
-              </g>
+              </React.Fragment>
             );
           });
         })}

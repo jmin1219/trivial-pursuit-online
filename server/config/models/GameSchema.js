@@ -60,6 +60,10 @@ const gameSchema = new mongoose.Schema({
       default: "Roll Dice!",
     },
   },
+  availableSpaces: {
+    type: [String],
+    default: [],
+  },
   usedQuestionIds: {
     // Array of trivia id's used in game
     type: [Number],

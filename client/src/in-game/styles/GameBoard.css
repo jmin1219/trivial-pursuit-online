@@ -1,23 +1,19 @@
-.space:hover rect,
-.space:hover image,
-.space:hover polygon,
-.space:hover text {
-  stroke-width: 2px;
-  stroke: #002f58;
-}
-
-.space {
-  z-index: 2;
-}
-
 .dim {
-  opacity: 0.7;
+  opacity: 0.3;
 }
 
-.higlight {
-  stroke: #002f58;
-  stroke-width: 2px;
+.dim-token {
+  opacity: 0.5
 }
+
+.highlight {
+  opacity: 1;
+}
+
+.highlight:hover {
+  border: 2px solid darkblue
+}
+
 
 /* SPACE COLORS */
 #W4,
