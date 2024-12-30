@@ -117,14 +117,14 @@ export const gameSocketHandlers = (socket, io) => {
     const game = await GameService.movePlayer(gameId, spaceId);
 
     if (SPACES[spaceId].rollAgain) {
-      io.to(game.gameId).emit("updated-game-state", game);
+      io.to(game.gameId).emit("player-moved", game);
       return;
     } else {
-      const randomQuestion = await GameService.getRandomQuestion(
-        game.usedQuestionIds,
+      const game = await GameService.getRandomQuestion(
+        gameId,
         SPACES[spaceId].color
       );
-      io.to(game.gameId).emit("new-question", randomQuestion);
+      io.to(game.gameId).emit("player-moved", game);
     }
   });
 };

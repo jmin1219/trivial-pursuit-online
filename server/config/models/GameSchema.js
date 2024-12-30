@@ -69,6 +69,12 @@ const gameSchema = new mongoose.Schema({
     type: [Number],
     default: [],
   },
+  currentQuestion: {
+    id: Number,
+    question: String,
+    answer: String,
+    category: String,
+  },
 });
 
 const Game = mongoose.model("Game", gameSchema);

@@ -147,18 +147,22 @@ export const GameService = {
     return game;
   },
 
-  getRandomQuestion: async (usedQuestionIds, color) => {
+  getRandomQuestion: async (gameId, color) => {
+    const game = await Game.findOne({ gameId });
+
     const filteredQuestions = triviaQuestions.filter(
       (q) => q.category === color
     );
     const randomQuestionId =
       Math.floor(Math.random() * filteredQuestions.length) + 1;
-    while (usedQuestionIds.includes(randomQuestionId)) {
+    while (game.usedQuestionIds.includes(randomQuestionId)) {
       randomQuestionId =
         Math.floor(Math.random() * filteredQuestions.length) + 1;
     }
-    usedQuestionIds.push(randomQuestionId);
-    return filteredQuestions[randomQuestionId];
+    game.usedQuestionIds.push(randomQuestionId);
+    game.currentQuestion = filteredQuestions[randomQuestionId];
+    await game.save();
+    return game;
   },
 
   getChatLog: async (gameId) => {

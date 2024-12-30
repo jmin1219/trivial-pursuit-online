@@ -12,7 +12,8 @@ import { COLORS } from "../../../../shared/constants/colors";
 import { useState } from "react";
 
 export default function TriviaCard() {
-  const { currentQuestion, gameState } = useGameContext();
+  const { gameState } = useGameContext();
+  const currentQuestion = gameState.currentQuestion;
   const [showAnswer, setShowAnswer] = useState(false);
   const currentTurnPlayer = gameState.players[gameState.currentTurnIndex];
   const playerData = JSON.parse(localStorage.getItem("player-data"));
@@ -55,7 +56,7 @@ export default function TriviaCard() {
       {currentTurnPlayer.name !== playerData.name && (
         <CardFooter className="flex justify-between px-20">
           <Button onClick={handleClickCorrect}>Correct</Button>
-          <Button onClicke={handleClickWrong}>Wrong</Button>
+          <Button onClick={handleClickWrong}>Wrong</Button>
         </CardFooter>
       )}
     </Card>

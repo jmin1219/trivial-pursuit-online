@@ -6,7 +6,7 @@ import { hexagonPoints, trapezoidPoints, getCentroid } from "@/lib/geometry";
 import TriviaCard from "./TriviaCard";
 
 export default function GameBoard() {
-  const { gameState, movePlayer, currentQuestion } = useGameContext();
+  const { gameState, movePlayer } = useGameContext();
   const [reachableSpaces, setReachableSpaces] = useState([]);
 
   const spokes = useMemo(() => Array.from({ length: 6 }), []); // 6 spokes
@@ -499,7 +499,7 @@ export default function GameBoard() {
           });
         })}
       </svg>
-      {currentQuestion && (
+      {gameState.currentQuestion && (
         <div className="w-full flex absolute justify-center items-center">
           <TriviaCard />
         </div>

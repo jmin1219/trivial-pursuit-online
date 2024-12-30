@@ -16,12 +16,13 @@ export default function Dice() {
     if (diceState.isShuffling) return;
     if (isChoosingSpace) {
       return alert("You already rolled the dice. Please choose a space.");
-    }
-    if (
+    } else if (
       gameState.players[gameState.currentTurnIndex].name !== playerData.name
     ) {
       alert("It's not your turn to roll the dice!");
       return;
+    } else if (gameState.currentQuestion) {
+      return alert("You need to answer the trivia question");
     }
     requestRollDice(gameState, playerData);
   };

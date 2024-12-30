@@ -10,7 +10,6 @@ export const useGameContext = () => useContext(GameContext);
 export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState({});
   const [isChoosingSpace, setIsChoosingSpace] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
   const { gameId } = useParams();
   const navigate = useNavigate();
 
@@ -53,14 +52,16 @@ export const GameProvider = ({ children }) => {
         clearInterval(interval);
       }, 1400);
     });
+    clientSocket.on("player-moved", (updatedGameState) => {
+      setGameState(updatedGameState);
+      setIsChoosingSpace(false);
+    });
     clientSocket.on("game-won", (message) => {
       alert(message);
       localStorage.removeItem("player-data");
       navigate("/");
     });
-    clientSocket.on("new-question", (question) => {
-      setCurrentQuestion(question);
-    });
+
     return () => {
       clientSocket.off("connect");
       clientSocket.off("update-game-state");
@@ -101,7 +102,6 @@ export const GameProvider = ({ children }) => {
         leaveGame,
         movePlayer,
         isChoosingSpace,
-        currentQuestion,
       }}
     >
       {children}
