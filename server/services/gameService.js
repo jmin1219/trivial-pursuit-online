@@ -122,17 +122,39 @@ export const GameService = {
   },
 
   calculateReachableSpaces: async (game, currentPosition, diceValue) => {
-    const reachableSpaces = [];
+    console.log(
+      `Calculating reachable spaces for player at position ${currentPosition} with dice value ${diceValue}`
+    );
+    const reachableSpaces = new Set();
+    const queue = [{ position: currentPosition, remainingDice: diceValue }];
+    const visited = new Set();
 
-    // TODO: Implement logic for calculating reachable spaces based on current position and dice value
-    if (currentPosition === "CH") {
-      for (let i = 0; i < 6; i++) {
-        diceValue < 6
-          ? reachableSpaces.push(`S${i}-${diceValue - 1}`)
-          : reachableSpaces.push(`W${i}`);
+    while (queue.length > 0) {
+      const { position, remainingDice } = queue.shift();
+      console.log(`Processing position ${position} with ${remainingDice} dice`);
+      if (remainingDice === 0) {
+        console.log(
+          `Adding position ${position} to reachable spaces:`,
+          reachableSpaces
+        );
+        reachableSpaces.add(position);
+        continue;
+      }
+      const currentSpace = SPACES[position];
+      for (const neighbor of currentSpace.connections) {
+        if (!visited.has(neighbor)) {
+          queue.push({ position: neighbor, remainingDice: remainingDice - 1 });
+          visited.add(neighbor);
+          console.log(
+            `Adding neighbor ${neighbor} to queue with ${
+              remainingDice - 1
+            } dice`
+          );
+        }
       }
     }
-    game.reachableSpaces = reachableSpaces;
+    console.log("Calculated reachable spaces:", reachableSpaces);
+    game.reachableSpaces = Array.from(reachableSpaces);
     await game.save();
     return game;
   },
@@ -148,12 +170,14 @@ export const GameService = {
   },
 
   getRandomQuestion: async (gameId, color) => {
+    // TODO: get question for central hub position:
+
     const game = await Game.findOne({ gameId }).populate("players");
 
     const filteredQuestions = triviaQuestions.filter(
       (q) => q.category === color
     );
-    const randomQuestionId =
+    let randomQuestionId =
       Math.floor(Math.random() * filteredQuestions.length) + 1;
     while (game.usedQuestionIds.includes(randomQuestionId)) {
       randomQuestionId =

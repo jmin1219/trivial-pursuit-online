@@ -75,7 +75,7 @@ export const SPACES = {
     rollAgain: false,
   },
   "S2-4": {
-    connections: ["S2-3", "W1"],
+    connections: ["S2-3", "W2"],
     color: "green",
     rollAgain: false,
   },
@@ -100,7 +100,7 @@ export const SPACES = {
     rollAgain: false,
   },
   "S3-4": {
-    connections: ["S3-3", "W1"],
+    connections: ["S3-3", "W3"],
     color: "purple",
     rollAgain: false,
   },
@@ -125,7 +125,7 @@ export const SPACES = {
     rollAgain: false,
   },
   "S4-4": {
-    connections: ["S4-3", "W1"],
+    connections: ["S4-3", "W4"],
     color: "blue",
     rollAgain: false,
   },
@@ -150,7 +150,7 @@ export const SPACES = {
     rollAgain: false,
   },
   "S5-4": {
-    connections: ["S5-3", "W1"],
+    connections: ["S5-3", "W5"],
     color: "orange",
     rollAgain: false,
   },

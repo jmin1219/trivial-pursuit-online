@@ -8,6 +8,7 @@ import TriviaCard from "./TriviaCard";
 export default function GameBoard() {
   const { gameState, movePlayer } = useGameContext();
   const [reachableSpaces, setReachableSpaces] = useState([]);
+  const playerData = JSON.parse(localStorage.getItem("player-data"));
 
   const spokes = useMemo(() => Array.from({ length: 6 }), []); // 6 spokes
   const outerNonWedge = useMemo(() => Array.from({ length: 36 }), []); // 36 non-wedge spaces on the outer wheel (6 groups of 6 non-wedge spaces)
@@ -22,6 +23,10 @@ export default function GameBoard() {
   const handleSpaceClick = (spaceId) => {
     if (!reachableSpaces.includes(spaceId)) {
       return alert("You can't move there.");
+    } else if (
+      gameState.players[gameState.currentTurnIndex].name !== playerData.name
+    ) {
+      return alert("It's not your turn to move.");
     } else {
       movePlayer(gameState.gameId, spaceId);
     }
@@ -157,7 +162,7 @@ export default function GameBoard() {
                   <polygon
                     points={points}
                     fill="lightgray"
-                    stroke={isAvailable ? "blue" : "white"}
+                    stroke={isAvailable ? "#002f58" : "white"}
                     strokeWidth={isAvailable ? 2 : 1}
                     style={{
                       opacity: gameState.isStarted
