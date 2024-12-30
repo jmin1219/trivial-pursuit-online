@@ -127,4 +127,14 @@ export const gameSocketHandlers = (socket, io) => {
       io.to(game.gameId).emit("player-moved", game);
     }
   });
+
+  socket.on("question-feedback", async ({ gameId, response }) => {
+    if (response === "correct") {
+      const game = await GameService.correctAnswer(gameId);
+      io.to(game.gameId).emit("updated-game-state", game);
+    } else {
+      const game = await GameService.wrongAnswer(gameId);
+      io.to(game.gameId).emit("updated-game-state", game);
+    }
+  });
 };

@@ -12,15 +12,15 @@ import { COLORS } from "../../../../shared/constants/colors";
 import { useState } from "react";
 
 export default function TriviaCard() {
-  const { gameState } = useGameContext();
+  const { gameState, answerQuestion } = useGameContext();
   const currentQuestion = gameState.currentQuestion;
   const [showAnswer, setShowAnswer] = useState(false);
   const currentTurnPlayer = gameState.players[gameState.currentTurnIndex];
   const playerData = JSON.parse(localStorage.getItem("player-data"));
 
-  const handleClickCorrect = () => {};
-
-  const handleClickWrong = () => {};
+  const handleAnswerQuestion = (response) => {
+    answerQuestion(gameState.gameId, response);
+  };
 
   return (
     <Card
@@ -32,11 +32,24 @@ export default function TriviaCard() {
       <CardHeader className="mb-4 text-center">
         <CardTitle>{COLORS[currentQuestion.category].category}</CardTitle>
         <CardDescription>
-          <span className="italic">
-            {currentTurnPlayer.name === playerData.name
-              ? "Answer the question using the chat."
-              : `It's ${currentTurnPlayer.name}'s turn! Submit whether they got it right or wrong.`}
-          </span>
+          {currentTurnPlayer.name === playerData.name ? (
+            <div className="mt-2">
+              <p className="italic">Answer the question using the chat.</p>
+              <p className="italic">
+                One of the other players will determine whether you got it
+                right.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-2">
+              <p className="italic">
+                It&apos;s {currentTurnPlayer.name}&apos;s turn!
+              </p>
+              <p className="italic">
+                Submit whether they got it right or wrong.`
+              </p>
+            </div>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center mb-8">
@@ -55,8 +68,10 @@ export default function TriviaCard() {
 
       {currentTurnPlayer.name !== playerData.name && (
         <CardFooter className="flex justify-between px-20">
-          <Button onClick={handleClickCorrect}>Correct</Button>
-          <Button onClick={handleClickWrong}>Wrong</Button>
+          <Button onClick={() => handleAnswerQuestion("correct")}>
+            Correct
+          </Button>
+          <Button onClick={() => handleAnswerQuestion("wrong")}>Wrong</Button>
         </CardFooter>
       )}
     </Card>

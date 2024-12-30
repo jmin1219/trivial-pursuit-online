@@ -70,6 +70,7 @@ export const GameProvider = ({ children }) => {
       clientSocket.off("dice-rolled");
       clientSocket.off("dice-rolling");
       clientSocket.off("game-won");
+      clientSocket.off("player-moved");
     };
   }, [gameId, navigate]);
 
@@ -92,6 +93,10 @@ export const GameProvider = ({ children }) => {
     clientSocket.emit("move-player", { gameId, spaceId });
   };
 
+  const answerQuestion = (gameId, response) => {
+    clientSocket.emit("question-feedback", { gameId, response });
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -102,6 +107,7 @@ export const GameProvider = ({ children }) => {
         leaveGame,
         movePlayer,
         isChoosingSpace,
+        answerQuestion,
       }}
     >
       {children}

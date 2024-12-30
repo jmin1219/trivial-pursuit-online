@@ -148,7 +148,7 @@ export const GameService = {
   },
 
   getRandomQuestion: async (gameId, color) => {
-    const game = await Game.findOne({ gameId });
+    const game = await Game.findOne({ gameId }).populate("players");
 
     const filteredQuestions = triviaQuestions.filter(
       (q) => q.category === color
@@ -161,6 +161,42 @@ export const GameService = {
     }
     game.usedQuestionIds.push(randomQuestionId);
     game.currentQuestion = filteredQuestions[randomQuestionId];
+    await game.save();
+    return game;
+  },
+
+  correctAnswer: async (gameId) => {
+    const game = await Game.findOne({ gameId }).populate("players");
+    game.currentQuestion = null;
+    game.chatLog.push({
+      sender: "server",
+      message: `${
+        game.players[game.currentTurnIndex].name
+      } answered correctly!`,
+      timestamp: new Date(),
+    });
+    game.diceState.dicePrompt = `${
+      game.players[game.currentTurnIndex].name
+    }'s turn to roll! Click the Dice to roll.`;
+    await game.save();
+    return game;
+  },
+
+  wrongAnswer: async (gameId) => {
+    const game = await Game.findOne({ gameId }).populate("players");
+    game.currentQuestion = null;
+    game.chatLog.push({
+      sender: "server",
+      message: `${
+        game.players[game.currentTurnIndex].name
+      } answered incorrectly!`,
+      timestamp: new Date(),
+    });
+    game.currentTurnIndex = (game.currentTurnIndex + 1) % game.players.length;
+    await game.save();
+    game.diceState.dicePrompt = `${
+      game.players[game.currentTurnIndex].name
+    }'s turn to roll! Click the Dice to roll.`;
     await game.save();
     return game;
   },

@@ -70,10 +70,18 @@ const gameSchema = new mongoose.Schema({
     default: [],
   },
   currentQuestion: {
-    id: Number,
-    question: String,
-    answer: String,
-    category: String,
+    id: {
+      type: Number,
+    },
+    question: {
+      type: String,
+    },
+    answer: {
+      type: String,
+    },
+    category: {
+      type: String,
+    },
   },
 });
 
