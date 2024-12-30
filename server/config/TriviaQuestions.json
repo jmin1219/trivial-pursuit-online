@@ -178,5 +178,125 @@
     "question": "Who is the author of '1984'?",
     "answer": "George Orwell",
     "category": "pink"
+  },
+  {
+    "id": 31,
+    "question": "What is the capital of Italy?",
+    "answer": "Rome",
+    "category": "blue"
+  },
+  {
+    "id": 32,
+    "question": "Who discovered penicillin?",
+    "answer": "Alexander Fleming",
+    "category": "purple"
+  },
+  {
+    "id": 33,
+    "question": "What is the chemical symbol for oxygen?",
+    "answer": "O",
+    "category": "green"
+  },
+  {
+    "id": 34,
+    "question": "In which year did the Wright brothers make their first flight?",
+    "answer": "1903",
+    "category": "yellow"
+  },
+  {
+    "id": 35,
+    "question": "Which sport is known as the 'noble art'?",
+    "answer": "Boxing",
+    "category": "orange"
+  },
+  {
+    "id": 36,
+    "question": "Who won the first Nobel Prize in Physics?",
+    "answer": "Wilhelm Röntgen",
+    "category": "pink"
+  },
+  {
+    "id": 37,
+    "question": "What is the largest ocean on Earth?",
+    "answer": "Pacific Ocean",
+    "category": "blue"
+  },
+  {
+    "id": 38,
+    "question": "Who wrote 'The Great Gatsby'?",
+    "answer": "F. Scott Fitzgerald",
+    "category": "purple"
+  },
+  {
+    "id": 39,
+    "question": "What is the chemical symbol for carbon?",
+    "answer": "C",
+    "category": "green"
+  },
+  {
+    "id": 40,
+    "question": "In which year did the United States declare independence?",
+    "answer": "1776",
+    "category": "yellow"
+  },
+  {
+    "id": 41,
+    "question": "Which country is known for the Great Wall?",
+    "answer": "China",
+    "category": "orange"
+  },
+  {
+    "id": 42,
+    "question": "Who is known as the 'Mother of Modern Physics'?",
+    "answer": "Marie Curie",
+    "category": "pink"
+  },
+  {
+    "id": 43,
+    "question": "What is the longest bone in the human body?",
+    "answer": "Femur",
+    "category": "blue"
+  },
+  {
+    "id": 44,
+    "question": "Who wrote 'Moby-Dick'?",
+    "answer": "Herman Melville",
+    "category": "purple"
+  },
+  {
+    "id": 45,
+    "question": "What is the chemical symbol for potassium?",
+    "answer": "K",
+    "category": "green"
+  },
+  {
+    "id": 46,
+    "question": "In which year did the French Revolution begin?",
+    "answer": "1789",
+    "category": "yellow"
+  },
+  {
+    "id": 47,
+    "question": "Which country is known for the Taj Mahal?",
+    "answer": "India",
+    "category": "orange"
+  },
+  {
+    "id": 48,
+    "question": "Who is known as the 'Father of Modern Physics'?",
+    "answer": "Albert Einstein",
+    "category": "pink"
+  },
+  {
+    "id": 49,
+    "question": "What is the smallest bone in the human body?",
+    "answer": "Stapes",
+    "category": "blue"
+  },
+  {
+    "id": 50,
+    "question": "Who wrote 'War and Peace'?",
+    "answer": "Leo Tolstoy",
+    "category": "purple"
   }
 ]

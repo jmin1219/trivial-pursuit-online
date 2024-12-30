@@ -325,13 +325,13 @@ export default function GameBoard() {
               onClick={() => handleSpaceClick("CH")}
               onMouseEnter={(e) => {
                 if (isAvailable) {
-                  e.target.style.stroke = "#002f58";
+                  e.target.style.stroke = "lightblue";
                   e.target.style.strokeWidth = 4;
                 }
               }}
               onMouseLeave={(e) => {
                 if (isAvailable) {
-                  e.target.style.stroke = "#002f58";
+                  e.target.style.stroke = "lightblue";
                   e.target.style.strokeWidth = 2;
                 }
               }}

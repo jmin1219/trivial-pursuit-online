@@ -122,21 +122,13 @@ export const GameService = {
   },
 
   calculateReachableSpaces: async (game, currentPosition, diceValue) => {
-    console.log(
-      `Calculating reachable spaces for player at position ${currentPosition} with dice value ${diceValue}`
-    );
     const reachableSpaces = new Set();
     const queue = [{ position: currentPosition, remainingDice: diceValue }];
     const visited = new Set();
 
     while (queue.length > 0) {
       const { position, remainingDice } = queue.shift();
-      console.log(`Processing position ${position} with ${remainingDice} dice`);
       if (remainingDice === 0) {
-        console.log(
-          `Adding position ${position} to reachable spaces:`,
-          reachableSpaces
-        );
         reachableSpaces.add(position);
         continue;
       }
@@ -145,15 +137,9 @@ export const GameService = {
         if (!visited.has(neighbor)) {
           queue.push({ position: neighbor, remainingDice: remainingDice - 1 });
           visited.add(neighbor);
-          console.log(
-            `Adding neighbor ${neighbor} to queue with ${
-              remainingDice - 1
-            } dice`
-          );
         }
       }
     }
-    console.log("Calculated reachable spaces:", reachableSpaces);
     game.reachableSpaces = Array.from(reachableSpaces);
     await game.save();
     return game;
@@ -191,14 +177,31 @@ export const GameService = {
 
   correctAnswer: async (gameId) => {
     const game = await Game.findOne({ gameId }).populate("players");
+    // Check if wedge question
+    const currentPlayer = game.players[game.currentTurnIndex];
+    if (currentPlayer.position[0] === "W") {
+      game.chatLog.push({
+        sender: "server",
+        message: `${
+          game.players[game.currentTurnIndex].name
+        } has earned a wedge!`,
+        timestamp: new Date(),
+      });
+      currentPlayer.wedges.push(game.currentQuestion.category);
+      await currentPlayer.save();
+      await game.save();
+    } else {
+      game.chatLog.push({
+        sender: "server",
+        message: `${
+          game.players[game.currentTurnIndex].name
+        } answered correctly!`,
+        timestamp: new Date(),
+      });
+      await game.save();
+    }
+
     game.currentQuestion = null;
-    game.chatLog.push({
-      sender: "server",
-      message: `${
-        game.players[game.currentTurnIndex].name
-      } answered correctly!`,
-      timestamp: new Date(),
-    });
     game.diceState.dicePrompt = `${
       game.players[game.currentTurnIndex].name
     }'s turn to roll! Click the Dice to roll.`;
