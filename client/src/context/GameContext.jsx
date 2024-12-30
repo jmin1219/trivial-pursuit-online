@@ -59,7 +59,6 @@ export const GameProvider = ({ children }) => {
       navigate("/");
     });
     clientSocket.on("new-question", (question) => {
-      console.log("New question received: ", question);
       setCurrentQuestion(question);
     });
     return () => {
