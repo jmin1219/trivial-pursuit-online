@@ -180,16 +180,33 @@ export const GameService = {
     // Check if wedge question
     const currentPlayer = game.players[game.currentTurnIndex];
     if (currentPlayer.position[0] === "W") {
-      game.chatLog.push({
-        sender: "server",
-        message: `${
+      if (currentPlayer.wedges.includes(game.currentQuestion.category)) {
+        game.chatLog.push({
+          sender: "server",
+          message: `${
+            game.players[game.currentTurnIndex].name
+          } already has this wedge.`,
+          timestamp: new Date(),
+        });
+        await game.save();
+        game.currentQuestion = null;
+        game.diceState.dicePrompt = `${
           game.players[game.currentTurnIndex].name
-        } has earned a wedge!`,
-        timestamp: new Date(),
-      });
-      currentPlayer.wedges.push(game.currentQuestion.category);
-      await currentPlayer.save();
-      await game.save();
+        }'s turn to roll! Click the Dice to roll.`;
+        await game.save();
+        return game;
+      } else {
+        game.chatLog.push({
+          sender: "server",
+          message: `${
+            game.players[game.currentTurnIndex].name
+          } has earned a wedge!`,
+          timestamp: new Date(),
+        });
+        currentPlayer.wedges.push(game.currentQuestion.category);
+        await currentPlayer.save();
+        await game.save();
+      }
     } else {
       game.chatLog.push({
         sender: "server",

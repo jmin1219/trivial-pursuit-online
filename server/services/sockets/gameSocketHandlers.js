@@ -117,7 +117,13 @@ export const gameSocketHandlers = (socket, io) => {
     const game = await GameService.movePlayer(gameId, spaceId);
 
     if (SPACES[spaceId].rollAgain) {
-      io.to(game.gameId).emit("player-moved", game);
+      // change diceState prompt
+      const updatedGame = await GameService.updateDiceState(
+        gameId,
+        game.diceState.diceValue,
+        "You landed on a Roll Again!"
+      );
+      io.to(game.gameId).emit("player-moved", updatedGame);
       return;
     } else {
       const game = await GameService.getRandomQuestion(
