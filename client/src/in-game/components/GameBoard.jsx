@@ -7,20 +7,20 @@ import TriviaCard from "./TriviaCard";
 
 export default function GameBoard() {
   const { gameState, movePlayer, currentQuestion } = useGameContext();
-  const [availableSpaces, setAvailableSpaces] = useState([]);
+  const [reachableSpaces, setReachableSpaces] = useState([]);
 
   const spokes = useMemo(() => Array.from({ length: 6 }), []); // 6 spokes
   const outerNonWedge = useMemo(() => Array.from({ length: 36 }), []); // 36 non-wedge spaces on the outer wheel (6 groups of 6 non-wedge spaces)
   const wedge = useMemo(() => Array.from({ length: 6 }), []); // 6 wedge spaces on the outer wheel
 
   useEffect(() => {
-    if (gameState.isStarted && gameState.availableSpaces) {
-      setAvailableSpaces(gameState.availableSpaces);
+    if (gameState.isStarted && gameState.reachableSpaces) {
+      setReachableSpaces(gameState.reachableSpaces);
     }
-  }, [gameState, gameState.availableSpaces]);
+  }, [gameState]);
 
   const handleSpaceClick = (spaceId) => {
-    if (!availableSpaces.includes(spaceId)) {
+    if (!reachableSpaces.includes(spaceId)) {
       return alert("You can't move there.");
     } else {
       movePlayer(gameState.gameId, spaceId);
@@ -47,7 +47,7 @@ export default function GameBoard() {
           const angle =
             (groupIndex * 60 + spaceIndex * 7.5 + 11.25) * (Math.PI / 180);
 
-          const isAvailable = availableSpaces.includes(`O${index}`);
+          const isAvailable = reachableSpaces.includes(`O${index}`);
 
           if (!rollAgain) {
             return (
@@ -237,7 +237,7 @@ export default function GameBoard() {
           const angle2 = (index * 60 + 7.5) * (Math.PI / 180);
           const points = trapezoidPoints(150, 150, 140, 170, angle1, angle2);
           const centroid = getCentroid(points);
-          const isAvailable = availableSpaces.includes(`W${index}`);
+          const isAvailable = reachableSpaces.includes(`W${index}`);
           return (
             <React.Fragment key={`W${index}`}>
               <g
@@ -313,11 +313,11 @@ export default function GameBoard() {
         })}
         {/* ------------------------------ Central Hub ------------------------------ */}
         {(() => {
-          const isAvailable = availableSpaces.includes("central-hub");
+          const isAvailable = reachableSpaces.includes("CH");
           return (
             <g
-              id="central-hub"
-              onClick={() => handleSpaceClick("central-hub")}
+              id="CH"
+              onClick={() => handleSpaceClick("CH")}
               onMouseEnter={(e) => {
                 if (isAvailable) {
                   e.target.style.stroke = "#002f58";
@@ -352,7 +352,7 @@ export default function GameBoard() {
           );
         })()}
         {gameState.players
-          .filter((player) => player.position === "central-hub")
+          .filter((player) => player.position === "CH")
           .map((player, i, arr) => {
             const angle = (i / arr.length) * 2 * Math.PI;
             const offsetX = 8 * Math.cos(angle);
@@ -406,7 +406,7 @@ export default function GameBoard() {
               (width + gap) * squareIndex * Math.sin((angle * Math.PI) / 180);
             const rectX = x + xOffset - width / 2;
             const rectY = y + yOffset - height / 2;
-            const isAvailable = availableSpaces.includes(
+            const isAvailable = reachableSpaces.includes(
               `S${index}-${squareIndex}`
             );
             return (

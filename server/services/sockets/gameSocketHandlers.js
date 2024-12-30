@@ -1,3 +1,4 @@
+import { SPACES } from "../../../shared/constants/spaces.js";
 import { GameService } from "../../services/gameService.js";
 
 export const gameSocketHandlers = (socket, io) => {
@@ -102,7 +103,7 @@ export const gameSocketHandlers = (socket, io) => {
       const currentPlayer = newGameState.players.find(
         (player) => player.name === playerData.name
       );
-      const finalGameState = await GameService.calculateAvailableSpaces(
+      const finalGameState = await GameService.calculateReachableSpaces(
         newGameState,
         currentPlayer.position,
         finalDiceValue
@@ -113,15 +114,17 @@ export const gameSocketHandlers = (socket, io) => {
   });
 
   socket.on("move-player", async ({ gameId, spaceId }) => {
-    try {
-      const { game, randomQuestion } = await GameService.movePlayer(
-        gameId,
-        spaceId
-      );
+    const game = await GameService.movePlayer(gameId, spaceId);
+
+    if (SPACES[spaceId].rollAgain) {
       io.to(game.gameId).emit("updated-game-state", game);
+      return;
+    } else {
+      const randomQuestion = await GameService.getRandomQuestion(
+        game.usedQuestionIds,
+        SPACES[spaceId].color
+      );
       io.to(game.gameId).emit("new-question", randomQuestion);
-    } catch (error) {
-      console.error(`Error moving player (gameSocketHandlers.js): ${error}`);
     }
   });
 };

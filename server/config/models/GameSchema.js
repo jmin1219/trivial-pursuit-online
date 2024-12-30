@@ -15,7 +15,7 @@ const playerSchema = new mongoose.Schema({
   },
   position: {
     type: String,
-    default: "central-hub",
+    default: "CH",
   },
 });
 
@@ -60,7 +60,7 @@ const gameSchema = new mongoose.Schema({
       default: "Roll Dice!",
     },
   },
-  availableSpaces: {
+  reachableSpaces: {
     type: [String],
     default: [],
   },
