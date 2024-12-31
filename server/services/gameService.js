@@ -156,13 +156,16 @@ export const GameService = {
   },
 
   getRandomQuestion: async (gameId, color) => {
-    // TODO: get question for central hub position:
-
     const game = await Game.findOne({ gameId }).populate("players");
 
     const filteredQuestions = triviaQuestions.filter(
       (q) => q.category === color
     );
+    if (filteredQuestions.length === 0) {
+      console.log("No questions found for this category.");
+      return game;
+    }
+
     let randomQuestionId =
       Math.floor(Math.random() * filteredQuestions.length) + 1;
     while (game.usedQuestionIds.includes(randomQuestionId)) {

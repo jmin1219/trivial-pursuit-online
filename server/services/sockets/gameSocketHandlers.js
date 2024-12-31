@@ -113,7 +113,7 @@ export const gameSocketHandlers = (socket, io) => {
     }, 1500);
   });
 
-  socket.on("move-player", async ({ gameId, spaceId }) => {
+  socket.on("move-player", async ({ gameId, spaceId, selectedColor }) => {
     const game = await GameService.movePlayer(gameId, spaceId);
 
     if (SPACES[spaceId].rollAgain) {
@@ -125,11 +125,12 @@ export const gameSocketHandlers = (socket, io) => {
       );
       io.to(game.gameId).emit("player-moved", updatedGame);
       return;
+    } else if (spaceId === "CH") {
+      const game = await GameService.getRandomQuestion(gameId, selectedColor);
+      io.to(game.gameId).emit("player-moved", game);
     } else {
-      const game = await GameService.getRandomQuestion(
-        gameId,
-        SPACES[spaceId].color
-      );
+      const spaceColor = SPACES[spaceId].color;
+      const game = await GameService.getRandomQuestion(gameId, spaceColor);
       io.to(game.gameId).emit("player-moved", game);
     }
   });

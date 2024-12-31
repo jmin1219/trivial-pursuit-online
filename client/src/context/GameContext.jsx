@@ -89,8 +89,8 @@ export const GameProvider = ({ children }) => {
     clientSocket.emit("leave-game", playerData);
   };
 
-  const movePlayer = (gameId, spaceId) => {
-    clientSocket.emit("move-player", { gameId, spaceId });
+  const movePlayer = (gameId, spaceId, selectedColor) => {
+    clientSocket.emit("move-player", { gameId, spaceId, selectedColor });
   };
 
   const answerQuestion = (gameId, response) => {

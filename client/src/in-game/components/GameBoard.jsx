@@ -1,13 +1,22 @@
-import "../styles/GameBoard.css";
 import React, { useEffect, useMemo, useState } from "react";
 import { COLORS } from "../../../../shared/constants/colors";
+import { SPACES } from "../../../../shared/constants/spaces";
 import { useGameContext } from "../../context/GameContext";
 import { hexagonPoints, trapezoidPoints, getCentroid } from "@/lib/geometry";
 import TriviaCard from "./TriviaCard";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function GameBoard() {
   const { gameState, movePlayer } = useGameContext();
   const [reachableSpaces, setReachableSpaces] = useState([]);
+  const [openColorPicker, setOpenColorPicker] = useState(false);
   const playerData = JSON.parse(localStorage.getItem("player-data"));
 
   const spokes = useMemo(() => Array.from({ length: 6 }), []); // 6 spokes
@@ -27,9 +36,19 @@ export default function GameBoard() {
       gameState.players[gameState.currentTurnIndex].name !== playerData.name
     ) {
       return alert("It's not your turn to move.");
+    } else if (spaceId === "CH") {
+      setOpenColorPicker(true);
     } else {
       movePlayer(gameState.gameId, spaceId);
     }
+  };
+
+  const getColorClass = (spaceId) => {
+    const colorName = SPACES[spaceId].color;
+    if (colorName) {
+      return `${COLORS[colorName].hex}`;
+    }
+    return "";
   };
 
   return (
@@ -79,6 +98,7 @@ export default function GameBoard() {
                     points={points}
                     stroke={isAvailable ? "#002f58" : "white"}
                     strokeWidth={isAvailable ? 2 : 1}
+                    fill={getColorClass(`O${index}`)}
                     style={{
                       opacity: gameState.isStarted
                         ? isAvailable
@@ -266,6 +286,7 @@ export default function GameBoard() {
                   points={points}
                   stroke={isAvailable ? "#002f58" : "white"}
                   strokeWidth={isAvailable ? 2 : 1}
+                  fill={getColorClass(`W${index}`)}
                   style={{
                     opacity: gameState.isStarted ? (isAvailable ? 1 : 0.3) : 1,
                     cursor: isAvailable ? "pointer" : "default",
@@ -443,6 +464,7 @@ export default function GameBoard() {
                     })`}
                     stroke={isAvailable ? "#002f58" : "white"}
                     strokeWidth={isAvailable ? 2 : 0.5}
+                    fill={getColorClass(`S${index}-${squareIndex}`)}
                     style={{
                       opacity: gameState.isStarted
                         ? isAvailable
@@ -504,6 +526,36 @@ export default function GameBoard() {
           });
         })}
       </svg>
+      {openColorPicker && (
+        // COLOR PICKER MODAL
+        <Card className="absolute w-3/4 flex flex-col justify-center items-center">
+          <CardHeader>
+            <CardTitle>Choose a Category</CardTitle>
+            <CardDescription>
+              On the Central Hub, you get to choose the category of your
+              question.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="">
+            {Object.keys(COLORS).map((color) => {
+              return (
+                <Button
+                  key={color}
+                  className={`m-2 bg-[${COLORS[color].hex}]`}
+                  onClick={() => {
+                    setOpenColorPicker(false);
+                    movePlayer(gameState.gameId, "CH", color);
+                  }}
+                >
+                  <p className="text-center text-sm">
+                    {COLORS[color].category}
+                  </p>
+                </Button>
+              );
+            })}
+          </CardContent>
+        </Card>
+      )}
       {gameState.currentQuestion && (
         <div className="w-full flex absolute justify-center items-center">
           <TriviaCard />
