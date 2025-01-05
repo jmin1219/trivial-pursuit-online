@@ -14,9 +14,15 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function GameBoard() {
-  const { gameState, movePlayer } = useGameContext();
+  const {
+    gameState,
+    movePlayer,
+    openColorPicker,
+    setOpenColorPicker,
+    getCHQuestion,
+    getFinalQuestionCategory,
+  } = useGameContext();
   const [reachableSpaces, setReachableSpaces] = useState([]);
-  const [openColorPicker, setOpenColorPicker] = useState(false);
   const playerData = JSON.parse(localStorage.getItem("player-data"));
 
   const spokes = useMemo(() => Array.from({ length: 6 }), []); // 6 spokes
@@ -37,7 +43,9 @@ export default function GameBoard() {
     ) {
       return alert("It's not your turn to move.");
     } else if (spaceId === "CH") {
-      setOpenColorPicker(true);
+      gameState.players[gameState.currentTurnIndex].wedges.length !== 6
+        ? setOpenColorPicker(true)
+        : getFinalQuestionCategory(gameState.gameId);
     } else {
       movePlayer(gameState.gameId, spaceId);
     }
@@ -544,7 +552,7 @@ export default function GameBoard() {
                   className={`m-2 bg-[${COLORS[color].hex}]`}
                   onClick={() => {
                     setOpenColorPicker(false);
-                    movePlayer(gameState.gameId, "CH", color);
+                    getCHQuestion(gameState.gameId, color);
                   }}
                 >
                   <p className="text-center text-sm">

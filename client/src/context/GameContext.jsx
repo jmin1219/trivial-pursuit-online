@@ -10,6 +10,7 @@ export const useGameContext = () => useContext(GameContext);
 export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState({});
   const [isChoosingSpace, setIsChoosingSpace] = useState(false);
+  const [openColorPicker, setOpenColorPicker] = useState(false);
   const { gameId } = useParams();
   const navigate = useNavigate();
 
@@ -56,10 +57,20 @@ export const GameProvider = ({ children }) => {
       setGameState(updatedGameState);
       setIsChoosingSpace(false);
     });
+    clientSocket.on("open-color-picker", (game) => {
+      setGameState(game);
+      setOpenColorPicker(true);
+    });
+    clientSocket.on("category-selected", (category) => {
+      clientSocket.emit("request-final-question", { gameId, category });
+    });
     clientSocket.on("game-won", (message) => {
       alert(message);
       localStorage.removeItem("player-data");
       navigate("/");
+    });
+    clientSocket.on("select-final-question-category", () => {
+      setOpenColorPicker(true);
     });
 
     return () => {
@@ -71,6 +82,8 @@ export const GameProvider = ({ children }) => {
       clientSocket.off("dice-rolling");
       clientSocket.off("game-won");
       clientSocket.off("player-moved");
+      clientSocket.off("open-color-picker");
+      clientSocket.off("category-selected");
     };
   }, [gameId, navigate]);
 
@@ -89,12 +102,20 @@ export const GameProvider = ({ children }) => {
     clientSocket.emit("leave-game", playerData);
   };
 
-  const movePlayer = (gameId, spaceId, selectedColor) => {
-    clientSocket.emit("move-player", { gameId, spaceId, selectedColor });
+  const movePlayer = (gameId, spaceId) => {
+    clientSocket.emit("move-player", { gameId, spaceId });
+  };
+
+  const getCHQuestion = (gameId, category) => {
+    clientSocket.emit("category-selected", { gameId, category });
   };
 
   const answerQuestion = (gameId, response) => {
     clientSocket.emit("question-feedback", { gameId, response });
+  };
+
+  const getFinalQuestionCategory = (gameId) => {
+    clientSocket.emit("get-final-question-category", gameId);
   };
 
   return (
@@ -108,6 +129,10 @@ export const GameProvider = ({ children }) => {
         movePlayer,
         isChoosingSpace,
         answerQuestion,
+        openColorPicker,
+        setOpenColorPicker,
+        getCHQuestion,
+        getFinalQuestionCategory,
       }}
     >
       {children}

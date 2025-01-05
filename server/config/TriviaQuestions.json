@@ -298,5 +298,41 @@
     "question": "Who wrote 'War and Peace'?",
     "answer": "Leo Tolstoy",
     "category": "purple"
+  },
+  {
+    "id": 51,
+    "question": "In which country is the ancient temple complex of Angkor Wat?",
+    "answer": "Cambodia",
+    "category": "blue"
+  },
+  {
+    "id": 52,
+    "question": "Which of the following is not a Wes Anderson movie -- Fantastic Mr. Fox, Moonrise Kingdom, or Napoleon Dynamite?",
+    "answer": "Napoleon Dynamite",
+    "category": "pink"
+  },
+  {
+    "id": 53,
+    "question": "Which of these jobs did Joseph Stalin do before he became a tyrannical dictator of the Soviet Union -- meteorologist, makeup artist, or mime?",
+    "answer": "Meteorologist",
+    "category": "yellow"
+  },
+  {
+    "id": 54,
+    "question": "Which supernatural British novels are the most banned books in the United States, according to the American Library Association?",
+    "answer": "Harry Potter books",
+    "category": "purple"
+  },
+  {
+    "id": 55,
+    "question": "How many points are on the Rolex crown, a prestige symbol that appears on every one of its precious timepieces?",
+    "answer": "Five",
+    "category": "green"
+  },
+  {
+    "id": 56,
+    "question": "Headquartered in Beaverton, Oregon, which athletic company was once known as Blue Ribbon Sports?",
+    "answer": "Nike",
+    "category": "orange"
   }
 ]

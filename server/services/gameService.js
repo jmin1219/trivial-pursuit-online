@@ -151,6 +151,7 @@ export const GameService = {
     currentPlayer.position = spaceId;
     await currentPlayer.save();
     game.reachableSpaces = [];
+
     await game.save();
     return game;
   },
@@ -180,8 +181,20 @@ export const GameService = {
 
   correctAnswer: async (gameId) => {
     const game = await Game.findOne({ gameId }).populate("players");
-    // Check if wedge question
     const currentPlayer = game.players[game.currentTurnIndex];
+
+    if (game.isChoosingFinalQuestion) {
+      game.isChoosingFinalQuestion = false;
+      game.chatLog.push({
+        sender: "server",
+        message: `${currentPlayer.name} has won the game!`,
+        timestamp: new Date(),
+      });
+      game.isStarted = false;
+      await game.save();
+      return game;
+    }
+
     if (currentPlayer.position[0] === "W") {
       if (currentPlayer.wedges.includes(game.currentQuestion.category)) {
         game.chatLog.push({

@@ -113,7 +113,7 @@ export const gameSocketHandlers = (socket, io) => {
     }, 1500);
   });
 
-  socket.on("move-player", async ({ gameId, spaceId, selectedColor }) => {
+  socket.on("move-player", async ({ gameId, spaceId }) => {
     const game = await GameService.movePlayer(gameId, spaceId);
 
     if (SPACES[spaceId].rollAgain) {
@@ -125,9 +125,6 @@ export const gameSocketHandlers = (socket, io) => {
       );
       io.to(game.gameId).emit("player-moved", updatedGame);
       return;
-    } else if (spaceId === "CH") {
-      const game = await GameService.getRandomQuestion(gameId, selectedColor);
-      io.to(game.gameId).emit("player-moved", game);
     } else {
       const spaceColor = SPACES[spaceId].color;
       const game = await GameService.getRandomQuestion(gameId, spaceColor);
@@ -135,10 +132,27 @@ export const gameSocketHandlers = (socket, io) => {
     }
   });
 
+  socket.on("category-selected", async ({ gameId, category }) => {
+    await GameService.movePlayer(gameId, "CH");
+    const game = await GameService.getRandomQuestion(gameId, category);
+    io.to(gameId).emit("updated-game-state", game);
+  });
+
+  socket.on("get-final-question-category", (gameId) => {
+    socket.to(gameId).broadcast("select-final-question-category");
+  });
+
   socket.on("question-feedback", async ({ gameId, response }) => {
     if (response === "correct") {
       const game = await GameService.correctAnswer(gameId);
-      io.to(game.gameId).emit("updated-game-state", game);
+      if (game.isChoosingFinalQuestion) {
+        io.to(game.gameId).emit(
+          "game-won",
+          `${game.players[game.currentTurnIndex].name} has won the game!`
+        );
+      } else {
+        io.to(game.gameId).emit("updated-game-state", game);
+      }
     } else {
       const game = await GameService.wrongAnswer(gameId);
       io.to(game.gameId).emit("updated-game-state", game);

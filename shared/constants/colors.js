@@ -16,7 +16,7 @@ export const COLORS = {
     hex: "#FFA500",
   },
   green: {
-    category: "Science",
+    category: "Science & Nature",
     hex: "#32CD32",
   },
   purple: {
