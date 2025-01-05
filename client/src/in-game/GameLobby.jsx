@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { CircleHelpIcon } from "lucide-react";
 import { useGameContext } from "../context/GameContext";
 import ChatBox from "./components/ChatBox";
 import Dice from "./components/Dice";
@@ -50,14 +49,6 @@ export default function GameLobby() {
         <div className="h-[45%]">
           <ChatBox />
         </div>
-      </div>
-
-      {/* HELP BUTTON: Show Game Rules in left bottom corner */}
-      <div className="absolute bottom-0 left-0 m-2">
-        <Button variant="ghost" size="icon">
-          {/* TODO: GAME RULES - Clicking Icon opens modal for game rules */}
-          <CircleHelpIcon size={32} />
-        </Button>
       </div>
     </div>
   );

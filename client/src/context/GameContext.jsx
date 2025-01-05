@@ -12,6 +12,7 @@ export const GameProvider = ({ children }) => {
   const [isChoosingSpace, setIsChoosingSpace] = useState(false);
   const [openColorPicker, setOpenColorPicker] = useState(false);
   const [categoryPickerPrompt, setCategoryPickerPrompt] = useState("");
+  const [openGameRules, setOpenGameRules] = useState(false);
   const { gameId } = useParams();
   const navigate = useNavigate();
 
@@ -133,6 +134,8 @@ export const GameProvider = ({ children }) => {
         getFinalQuestionCategory,
         categoryPickerPrompt,
         setCategoryPickerPrompt,
+        openGameRules,
+        setOpenGameRules,
       }}
     >
       {children}

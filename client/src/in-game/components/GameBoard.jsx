@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { CircleHelpIcon } from "lucide-react";
 import { COLORS } from "../../../../shared/constants/colors";
 import { SPACES } from "../../../../shared/constants/spaces";
 import { useGameContext } from "../../context/GameContext";
@@ -12,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import GameRulesCard from "./GameRulesCard";
 
 export default function GameBoard() {
   const {
@@ -23,6 +25,8 @@ export default function GameBoard() {
     getFinalQuestionCategory,
     categoryPickerPrompt,
     setCategoryPickerPrompt,
+    openGameRules,
+    setOpenGameRules,
   } = useGameContext();
   const [reachableSpaces, setReachableSpaces] = useState([]);
   const playerData = JSON.parse(localStorage.getItem("player-data"));
@@ -543,8 +547,9 @@ export default function GameBoard() {
           });
         })}
       </svg>
+
+      {/* COLOR PICKER MODAL */}
       {openColorPicker && (
-        // COLOR PICKER MODAL
         <Card className="absolute w-3/4 flex flex-col justify-center items-center">
           <CardHeader>
             <CardTitle>Choose a Category</CardTitle>
@@ -570,9 +575,26 @@ export default function GameBoard() {
           </CardContent>
         </Card>
       )}
+      {/* TRIVIA CARD */}
       {gameState.currentQuestion && (
         <div className="w-full flex absolute justify-center items-center">
           <TriviaCard />
+        </div>
+      )}
+      {/* HELP BUTTON: Show Game Rules in left bottom corner */}
+      <div className="absolute bottom-0 left-0 m-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setOpenGameRules(true)}
+        >
+          <CircleHelpIcon size={32} />
+        </Button>
+      </div>
+      {/* GAME RULES MODAL */}
+      {openGameRules && (
+        <div className="absolute w-3/4 h-3/4 p-3 flex justify-center items-center bg-lime-100 z-1000 border-4 border-black rounded-2xl">
+          <GameRulesCard />
         </div>
       )}
     </div>
