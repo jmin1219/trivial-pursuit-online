@@ -21,6 +21,8 @@ export default function GameBoard() {
     setOpenColorPicker,
     getCHQuestion,
     getFinalQuestionCategory,
+    categoryPickerPrompt,
+    setCategoryPickerPrompt,
   } = useGameContext();
   const [reachableSpaces, setReachableSpaces] = useState([]);
   const playerData = JSON.parse(localStorage.getItem("player-data"));
@@ -43,9 +45,16 @@ export default function GameBoard() {
     ) {
       return alert("It's not your turn to move.");
     } else if (spaceId === "CH") {
-      gameState.players[gameState.currentTurnIndex].wedges.length !== 6
-        ? setOpenColorPicker(true)
-        : getFinalQuestionCategory(gameState.gameId);
+      if (gameState.players[gameState.currentTurnIndex].wedges.length !== 6) {
+        {
+          setOpenColorPicker(true);
+          setCategoryPickerPrompt(
+            "On the Central Hub, you get to choose the category of your question."
+          );
+        }
+      } else {
+        getFinalQuestionCategory(gameState.gameId);
+      }
     } else {
       movePlayer(gameState.gameId, spaceId);
     }
@@ -539,10 +548,7 @@ export default function GameBoard() {
         <Card className="absolute w-3/4 flex flex-col justify-center items-center">
           <CardHeader>
             <CardTitle>Choose a Category</CardTitle>
-            <CardDescription>
-              On the Central Hub, you get to choose the category of your
-              question.
-            </CardDescription>
+            <CardDescription>{categoryPickerPrompt}</CardDescription>
           </CardHeader>
           <CardContent className="">
             {Object.keys(COLORS).map((color) => {

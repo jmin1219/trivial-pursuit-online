@@ -183,18 +183,6 @@ export const GameService = {
     const game = await Game.findOne({ gameId }).populate("players");
     const currentPlayer = game.players[game.currentTurnIndex];
 
-    if (game.isChoosingFinalQuestion) {
-      game.isChoosingFinalQuestion = false;
-      game.chatLog.push({
-        sender: "server",
-        message: `${currentPlayer.name} has won the game!`,
-        timestamp: new Date(),
-      });
-      game.isStarted = false;
-      await game.save();
-      return game;
-    }
-
     if (currentPlayer.position[0] === "W") {
       if (currentPlayer.wedges.includes(game.currentQuestion.category)) {
         game.chatLog.push({
@@ -274,5 +262,11 @@ export const GameService = {
     );
     await game.save();
     return game.chatLog;
+  },
+
+  endGame: async (gameId) => {
+    const game = await Game.findOne({ gameId }).populate("players");
+    await Player.deleteMany({ _id: { $in: game.players } });
+    await Game.deleteOne({ gameId });
   },
 };

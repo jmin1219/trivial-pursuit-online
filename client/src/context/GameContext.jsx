@@ -11,6 +11,7 @@ export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState({});
   const [isChoosingSpace, setIsChoosingSpace] = useState(false);
   const [openColorPicker, setOpenColorPicker] = useState(false);
+  const [categoryPickerPrompt, setCategoryPickerPrompt] = useState("");
   const { gameId } = useParams();
   const navigate = useNavigate();
 
@@ -57,10 +58,6 @@ export const GameProvider = ({ children }) => {
       setGameState(updatedGameState);
       setIsChoosingSpace(false);
     });
-    clientSocket.on("open-color-picker", (game) => {
-      setGameState(game);
-      setOpenColorPicker(true);
-    });
     clientSocket.on("category-selected", (category) => {
       clientSocket.emit("request-final-question", { gameId, category });
     });
@@ -70,6 +67,7 @@ export const GameProvider = ({ children }) => {
       navigate("/");
     });
     clientSocket.on("select-final-question-category", () => {
+      setCategoryPickerPrompt("Select a category for the final question.");
       setOpenColorPicker(true);
     });
 
@@ -82,8 +80,8 @@ export const GameProvider = ({ children }) => {
       clientSocket.off("dice-rolling");
       clientSocket.off("game-won");
       clientSocket.off("player-moved");
-      clientSocket.off("open-color-picker");
       clientSocket.off("category-selected");
+      clientSocket.off("select-final-question-category");
     };
   }, [gameId, navigate]);
 
@@ -133,6 +131,8 @@ export const GameProvider = ({ children }) => {
         setOpenColorPicker,
         getCHQuestion,
         getFinalQuestionCategory,
+        categoryPickerPrompt,
+        setCategoryPickerPrompt,
       }}
     >
       {children}

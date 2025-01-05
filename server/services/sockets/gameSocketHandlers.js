@@ -139,17 +139,22 @@ export const gameSocketHandlers = (socket, io) => {
   });
 
   socket.on("get-final-question-category", (gameId) => {
-    socket.to(gameId).broadcast("select-final-question-category");
+    socket.broadcast.to(gameId).emit("select-final-question-category");
   });
 
   socket.on("question-feedback", async ({ gameId, response }) => {
     if (response === "correct") {
       const game = await GameService.correctAnswer(gameId);
-      if (game.isChoosingFinalQuestion) {
+      const currentPlayer = game.players[game.currentTurnIndex];
+      if (
+        currentPlayer.wedges.length === 6 &&
+        currentPlayer.position === "CH"
+      ) {
         io.to(game.gameId).emit(
           "game-won",
-          `${game.players[game.currentTurnIndex].name} has won the game!`
+          `${currentPlayer.name} (${currentPlayer.color}) has won the game!`
         );
+        await GameService.endGame(gameId);
       } else {
         io.to(game.gameId).emit("updated-game-state", game);
       }
