@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
 
-const clientSocket = io("http://localhost:3001");
+const clientSocket = io("https://trivial-pursuit-online-backend.onrender.com");
 
 export default clientSocket;
