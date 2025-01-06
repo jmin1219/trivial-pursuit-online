@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useHomeContext } from "../context/HomeContext";
