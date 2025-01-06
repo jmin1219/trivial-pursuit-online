@@ -36,21 +36,6 @@ connectDB();
 
 app.use("/api/games", gameApiRoutes);
 
-// ----------------- DEPLOYMENT -
-
-const __dirname1 = path.resolve();
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1, "../client", "dist")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname1, "../client", "dist", "index.html"));
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running successfully.");
-  });
-}
-
 httpServer.listen(process.env.SERVER_PORT, () => {
   console.log(`Server is running on port ${process.env.SERVER_PORT}.`);
 });
