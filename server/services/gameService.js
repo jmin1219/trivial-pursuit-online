@@ -5,7 +5,7 @@ import path from "path";
 import { SPACES } from "../constants/spaces.js";
 
 const triviaQuestions = JSON.parse(
-  fs.readFileSync(path.resolve(`server/config/TriviaQuestions.json`), `utf-8`)
+  fs.readFileSync(path.resolve(`/config/TriviaQuestions.json`), `utf-8`)
 );
 
 const generateGameId = async () => {
