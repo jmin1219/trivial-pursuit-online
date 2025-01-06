@@ -17,7 +17,7 @@ app.use(express.json());
 
 const io = new SocketIO(httpServer, {
   cors: {
-    origin: `http://localhost:${process.env.CLIENT_PORT}`,
+    origin: process.env.CLIENT_ORIGIN,
     methods: ["GET", "POST"],
   },
 });
