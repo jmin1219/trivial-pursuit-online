@@ -42,7 +42,7 @@ connectDB();
 app.use("/api/games", gameApiRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Trivial Pursuit Online Backend.");
+  res.send("Trivial Pursuit Online Ba");
 });
 
 httpServer.listen(process.env.SERVER_PORT, () => {
