@@ -1,0 +1,27 @@
+{
+  "name": "trivial-pursuit-online",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmin1219/trivial-pursuit-online.git"
+  },
+  "author": "Jaymin Chang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmin1219/trivial-pursuit-online/issues"
+  },
+  "homepage": "https://github.com/jmin1219/trivial-pursuit-online#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.3",
+    "socket.io": "^4.8.1"
+  }
+}
