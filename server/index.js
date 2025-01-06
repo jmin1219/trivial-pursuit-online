@@ -5,6 +5,9 @@ import { Server as SocketIO } from "socket.io";
 import connectDB from "./config/db.js";
 import configureSocket from "./config/socket.js";
 import gameApiRoutes from "./services/api/routes/gameApiRoutes.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -14,7 +17,7 @@ app.use(express.json());
 
 const io = new SocketIO(httpServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: `http://localhost:${process.env.CLIENT_PORT}`,
     methods: ["GET", "POST"],
   },
 });
@@ -25,6 +28,6 @@ connectDB();
 
 app.use("/api/games", gameApiRoutes);
 
-httpServer.listen(3001, () => {
-  console.log("Server is running on port 3001.");
+httpServer.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server is running on port ${process.env.SERVER_PORT}.`);
 });
