@@ -15,7 +15,7 @@ const httpServer = http.createServer(app);
 app.use(
   cors({
     origin: [
-      "https://trivial-pursuit-online-client.onrender.com",
+      "https://trivial-pursuit-online-59xk.onrender.com",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST"],
@@ -27,7 +27,7 @@ app.use(express.json());
 const io = new SocketIO(httpServer, {
   cors: {
     origin: [
-      "https://trivial-pursuit-online-client.onrender.com",
+      "https://trivial-pursuit-online-59xk.onrender.com",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST"],
