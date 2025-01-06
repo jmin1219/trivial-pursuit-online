@@ -12,13 +12,20 @@ dotenv.config();
 const app = express();
 const httpServer = http.createServer(app);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN,
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 const io = new SocketIO(httpServer, {
   cors: {
     origin: process.env.CLIENT_ORIGIN,
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
