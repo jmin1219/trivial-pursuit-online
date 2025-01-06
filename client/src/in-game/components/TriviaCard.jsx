@@ -8,7 +8,7 @@ import {
 } from "../../components/ui/card";
 import { useGameContext } from "../../context/GameContext";
 import { Button } from "../../components/ui/button";
-import { COLORS } from "../../../../shared/constants/colors";
+import { COLORS } from "../../../constants/colors";
 import { useState } from "react";
 
 export default function TriviaCard() {

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { CircleHelpIcon } from "lucide-react";
-import { COLORS } from "../../../../shared/constants/colors";
-import { SPACES } from "../../../../shared/constants/spaces";
+import { COLORS } from "../../../constants/colors";
+import { SPACES } from "../../../constants/spaces";
 import { useGameContext } from "../../context/GameContext";
 import { hexagonPoints, trapezoidPoints, getCentroid } from "@/lib/geometry";
 import TriviaCard from "./TriviaCard";

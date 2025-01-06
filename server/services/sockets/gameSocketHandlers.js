@@ -1,4 +1,4 @@
-import { SPACES } from "../../../shared/constants/spaces.js";
+import { SPACES } from "../../constants/spaces.js";
 import { GameService } from "../../services/gameService.js";
 
 export const gameSocketHandlers = (socket, io) => {

@@ -1,5 +1,5 @@
 import { createRequire } from "module";
-import { COLORS } from "../shared/constants/colors.js";
+import { COLORS } from "./constants/colors";
 
 const require = createRequire(import.meta.url);
 

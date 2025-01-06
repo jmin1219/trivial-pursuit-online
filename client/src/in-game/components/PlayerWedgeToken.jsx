@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { COLORS } from "../../../../shared/constants/colors";
+import { COLORS } from "../../../constants/colors";
 
 export default function PlayerWedgeToken({ playerData }) {
   const { color, name, wedges } = playerData;

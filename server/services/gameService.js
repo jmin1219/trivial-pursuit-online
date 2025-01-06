@@ -2,7 +2,7 @@
 import { Game, Player } from "../config/models/GameSchema.js";
 import fs from "fs";
 import path from "path";
-import { SPACES } from "../../shared/constants/spaces.js";
+import { SPACES } from "../constants/spaces.js";
 
 const triviaQuestions = JSON.parse(
   fs.readFileSync(

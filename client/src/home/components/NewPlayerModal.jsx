@@ -19,7 +19,7 @@ import {
 import { apiFetchGameData } from "@/services/api/homeApi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { COLORS } from "../../../../shared/constants/colors";
+import { COLORS } from "../../../constants/colors";
 
 export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
   const [availableColors, setAvailableColors] = useState(Object.keys(COLORS));
