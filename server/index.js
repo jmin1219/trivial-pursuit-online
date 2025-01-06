@@ -6,7 +6,6 @@ import connectDB from "./config/db.js";
 import configureSocket from "./config/socket.js";
 import gameApiRoutes from "./services/api/routes/gameApiRoutes.js";
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config();
 
@@ -15,7 +14,10 @@ const httpServer = http.createServer(app);
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN,
+    origin: [
+      "https://trivial-pursuit-online-client.onrender.com",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -24,7 +26,10 @@ app.use(express.json());
 
 const io = new SocketIO(httpServer, {
   cors: {
-    origin: process.env.CLIENT_ORIGIN,
+    origin: [
+      "https://trivial-pursuit-online-client.onrender.com",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
