@@ -41,6 +41,7 @@ export default function GameBoard() {
       setReachableSpaces(gameState.reachableSpaces);
     }
   }, [gameState]);
+  console.log("Reachable Spaces:", reachableSpaces);
 
   const handleSpaceClick = (spaceId) => {
     if (!reachableSpaces.includes(spaceId)) {

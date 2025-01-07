@@ -125,11 +125,14 @@ export const GameService = {
 
     while (queue.length > 0) {
       const { position, remainingDice } = queue.shift();
-      if (remainingDice === 0) {
+
+      if (remainingDice === 0 && position !== currentPosition) {
         reachableSpaces.add(position);
         continue;
       }
+
       const currentSpace = SPACES[position];
+
       for (const neighbor of currentSpace.connections) {
         if (!visited.has(neighbor)) {
           queue.push({ position: neighbor, remainingDice: remainingDice - 1 });
