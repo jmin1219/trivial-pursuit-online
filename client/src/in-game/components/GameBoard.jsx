@@ -550,17 +550,17 @@ export default function GameBoard() {
 
       {/* COLOR PICKER MODAL */}
       {openColorPicker && (
-        <Card className="absolute w-3/4 flex flex-col justify-center items-center">
+        <Card className="absolute w-3/4 flex flex-col justify-center items-center border-8 border-gray-700">
           <CardHeader>
             <CardTitle>Choose a Category</CardTitle>
             <CardDescription>{categoryPickerPrompt}</CardDescription>
           </CardHeader>
-          <CardContent className="">
+          <CardContent className="grid md:grid-cols-3 sm:grid-cols-2 overflow-auto">
             {Object.keys(COLORS).map((color) => {
               return (
                 <Button
                   key={color}
-                  className={`m-2`}
+                  className="m-2 p-4 text-center flex items-center justify-center text-sm"
                   style={{ backgroundColor: COLORS[color].hex }}
                   onClick={() => {
                     setOpenColorPicker(false);
