@@ -61,6 +61,11 @@ export default function GameBoard() {
         getFinalQuestionCategory(gameState.gameId);
       }
     } else {
+      setReachableSpaces([]);
+      document.querySelectorAll("polygon", "rect").forEach((polygon) => {
+        polygon.style.stroke = "white";
+        polygon.style.strokeWidth = 1;
+      });
       movePlayer(gameState.gameId, spaceId);
     }
   };
@@ -99,23 +104,7 @@ export default function GameBoard() {
             return (
               <React.Fragment key={`O${index}`}>
                 {/* Outer circle - Non-Wedge Spaces */}
-                <g
-                  key={index}
-                  id={`O${index}`}
-                  onClick={() => handleSpaceClick(`O${index}`)}
-                  onMouseEnter={(e) => {
-                    if (isAvailable) {
-                      e.target.style.stroke = "#002f58";
-                      e.target.style.strokeWidth = 4;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (isAvailable) {
-                      e.target.style.stroke = "#002f58";
-                      e.target.style.strokeWidth = 2;
-                    }
-                  }}
-                >
+                <g key={index} id={`O${index}`}>
                   <polygon
                     points={points}
                     stroke={isAvailable ? "#002f58" : "white"}
@@ -131,6 +120,19 @@ export default function GameBoard() {
                         isAvailable && gameState.isStarted
                           ? "pointer"
                           : "default",
+                    }}
+                    onClick={() => handleSpaceClick(`O${index}`)}
+                    onMouseEnter={(e) => {
+                      if (isAvailable) {
+                        e.target.style.stroke = "#002f58";
+                        e.target.style.strokeWidth = 4;
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (isAvailable) {
+                        e.target.style.stroke = "#002f58";
+                        e.target.style.strokeWidth = 2;
+                      }
                     }}
                   />
                 </g>
@@ -188,18 +190,6 @@ export default function GameBoard() {
                   key={index}
                   id={`O${index}`}
                   onClick={() => handleSpaceClick(`O${index}`)}
-                  onMouseEnter={(e) => {
-                    if (isAvailable) {
-                      e.target.style.stroke = "darkblyue";
-                      e.target.style.strokeWidth = 4;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (isAvailable) {
-                      e.target.style.stroke = "blue";
-                      e.target.style.strokeWidth = 2;
-                    }
-                  }}
                 >
                   <polygon
                     points={points}
@@ -214,11 +204,23 @@ export default function GameBoard() {
                         : 1,
                       cursor: isAvailable ? "pointer" : "default",
                     }}
+                    onMouseEnter={(e) => {
+                      if (isAvailable) {
+                        e.target.style.stroke = "darkblue";
+                        e.target.style.strokeWidth = 4;
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (isAvailable) {
+                        e.target.style.stroke = "blue";
+                        e.target.style.strokeWidth = 2;
+                      }
+                    }}
                   />
                   <text
                     x={centroid.x}
                     y={centroid.y}
-                    fontSize="7"
+                    fontSize="5"
                     textAnchor="middle"
                     alignmentBaseline="middle"
                     fill="black"
@@ -287,23 +289,7 @@ export default function GameBoard() {
           const isAvailable = reachableSpaces.includes(`W${index}`);
           return (
             <React.Fragment key={`W${index}`}>
-              <g
-                key={index}
-                id={`W${index}`}
-                onClick={() => handleSpaceClick(`W${index}`)}
-                onMouseEnter={(e) => {
-                  if (isAvailable) {
-                    e.target.style.stroke = "#002f58";
-                    e.target.style.strokeWidth = 4;
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (isAvailable) {
-                    e.target.style.stroke = "#002f58";
-                    e.target.style.strokeWidth = 2;
-                  }
-                }}
-              >
+              <g key={index} id={`W${index}`}>
                 <polygon
                   points={points}
                   stroke={isAvailable ? "#002f58" : "white"}
@@ -312,6 +298,19 @@ export default function GameBoard() {
                   style={{
                     opacity: gameState.isStarted ? (isAvailable ? 1 : 0.3) : 1,
                     cursor: isAvailable ? "pointer" : "default",
+                  }}
+                  onClick={() => handleSpaceClick(`W${index}`)}
+                  onMouseEnter={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "#002f58";
+                      e.target.style.strokeWidth = 4;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (isAvailable) {
+                      e.target.style.stroke = "#002f58";
+                      e.target.style.strokeWidth = 2;
+                    }
                   }}
                 />
               </g>
@@ -363,22 +362,7 @@ export default function GameBoard() {
         {(() => {
           const isAvailable = reachableSpaces.includes("CH");
           return (
-            <g
-              id="CH"
-              onClick={() => handleSpaceClick("CH")}
-              onMouseEnter={(e) => {
-                if (isAvailable) {
-                  e.target.style.stroke = "lightblue";
-                  e.target.style.strokeWidth = 4;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (isAvailable) {
-                  e.target.style.stroke = "lightblue";
-                  e.target.style.strokeWidth = 2;
-                }
-              }}
-            >
+            <g id="CH">
               <polygon
                 points={hexagonPoints(150, 150, 35)}
                 fill="#002f58"
@@ -387,6 +371,19 @@ export default function GameBoard() {
                 style={{
                   opacity: gameState.isStarted ? (isAvailable ? 1 : 0.3) : 1,
                   cursor: isAvailable ? "pointer" : "default",
+                }}
+                onClick={() => handleSpaceClick("CH")}
+                onMouseEnter={(e) => {
+                  if (isAvailable) {
+                    e.target.style.stroke = "lightblue";
+                    e.target.style.strokeWidth = 4;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (isAvailable) {
+                    e.target.style.stroke = "lightblue";
+                    e.target.style.strokeWidth = 2;
+                  }
                 }}
               />
               <image
@@ -462,19 +459,6 @@ export default function GameBoard() {
                 <g
                   key={`${index}-${squareIndex}`}
                   id={`S${index}-${squareIndex}`}
-                  onClick={() => handleSpaceClick(`S${index}-${squareIndex}`)}
-                  onMouseEnter={(e) => {
-                    if (isAvailable) {
-                      e.target.style.stroke = "#002f58";
-                      e.target.style.strokeWidth = 4;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (isAvailable) {
-                      e.target.style.stroke = "#002f58";
-                      e.target.style.strokeWidth = 2;
-                    }
-                  }}
                 >
                   <rect
                     x={x + xOffset - width / 2}
@@ -485,7 +469,7 @@ export default function GameBoard() {
                       y + yOffset
                     })`}
                     stroke={isAvailable ? "#002f58" : "white"}
-                    strokeWidth={isAvailable ? 2 : 0.5}
+                    strokeWidth={isAvailable ? 2 : 1}
                     fill={getColorClass(`S${index}-${squareIndex}`)}
                     style={{
                       opacity: gameState.isStarted
@@ -495,54 +479,66 @@ export default function GameBoard() {
                         : 1,
                       cursor: isAvailable ? "pointer" : "default",
                     }}
+                    onClick={() => handleSpaceClick(`S${index}-${squareIndex}`)}
+                    onMouseEnter={(e) => {
+                      if (isAvailable) {
+                        e.target.style.stroke = "#002f58";
+                        e.target.style.strokeWidth = 4;
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (isAvailable) {
+                        e.target.style.stroke = "#002f58";
+                        e.target.style.strokeWidth = 2;
+                      }
+                    }}
                   />
-                </g>
-
-                {gameState.players
-                  .filter(
-                    (player) => player.position === `S${index}-${squareIndex}`
-                  )
-                  .map((player, i, arr) => {
-                    const offset = (i - (arr.length - 1) / 2) * 10;
-                    const angleRad = ((angle + 90) * Math.PI) / 180;
-                    const offsetX = offset * Math.cos(angleRad);
-                    const offsetY = offset * Math.sin(angleRad);
-                    const isTurn =
-                      gameState.players[gameState.currentTurnIndex].name ===
-                      player.name;
-                    return (
-                      <g
-                        key={player.name}
-                        className={
-                          gameState.isStarted
-                            ? !isTurn
-                              ? "opacity-50"
+                  {gameState.players
+                    .filter(
+                      (player) => player.position === `S${index}-${squareIndex}`
+                    )
+                    .map((player, i, arr) => {
+                      const offset = (i - (arr.length - 1) / 2) * 10;
+                      const angleRad = ((angle + 90) * Math.PI) / 180;
+                      const offsetX = offset * Math.cos(angleRad);
+                      const offsetY = offset * Math.sin(angleRad);
+                      const isTurn =
+                        gameState.players[gameState.currentTurnIndex].name ===
+                        player.name;
+                      return (
+                        <g
+                          key={player.name}
+                          className={
+                            gameState.isStarted
+                              ? !isTurn
+                                ? "opacity-50"
+                                : ""
                               : ""
-                            : ""
-                        }
-                      >
-                        <circle
-                          cx={rectX + width / 2 + offsetX}
-                          cy={rectY + height / 2 + offsetY}
-                          r={8}
-                          fill={COLORS[player.color].hex}
-                          stroke="black"
-                          strokeWidth={1.5}
-                        />
-                        <text
-                          x={rectX + width / 2 + offsetX}
-                          y={rectY + height / 2 + offsetY}
-                          fontSize="10"
-                          fontWeight={600}
-                          textAnchor="middle"
-                          alignmentBaseline="middle"
-                          fill="white"
+                          }
                         >
-                          {player.name.charAt(0).toUpperCase()}
-                        </text>
-                      </g>
-                    );
-                  })}
+                          <circle
+                            cx={rectX + width / 2 + offsetX}
+                            cy={rectY + height / 2 + offsetY}
+                            r={8}
+                            fill={COLORS[player.color].hex}
+                            stroke="black"
+                            strokeWidth={1.5}
+                          />
+                          <text
+                            x={rectX + width / 2 + offsetX}
+                            y={rectY + height / 2 + offsetY}
+                            fontSize="10"
+                            fontWeight={600}
+                            textAnchor="middle"
+                            alignmentBaseline="middle"
+                            fill="white"
+                          >
+                            {player.name.charAt(0).toUpperCase()}
+                          </text>
+                        </g>
+                      );
+                    })}
+                </g>
               </React.Fragment>
             );
           });

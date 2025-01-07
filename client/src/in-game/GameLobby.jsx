@@ -18,7 +18,11 @@ export default function GameLobby() {
   };
 
   if (!gameState || !gameId) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-full justify-center items-center text-2xl">
+        Loading...
+      </div>
+    );
   }
 
   return (
