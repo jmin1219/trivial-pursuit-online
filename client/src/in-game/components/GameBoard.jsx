@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import GameRulesCard from "./GameRulesCard";
+import centralHubLogo from "@/assets/trivial-central-logo.png";
 
 export default function GameBoard() {
   const {
@@ -389,7 +390,7 @@ export default function GameBoard() {
                 }}
               />
               <image
-                href="/src/assets/trivial-central-logo.png"
+                href={centralHubLogo}
                 height={50}
                 width={50}
                 x={125.2}
