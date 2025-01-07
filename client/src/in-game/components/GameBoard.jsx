@@ -206,13 +206,13 @@ export default function GameBoard() {
                     }}
                     onMouseEnter={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "darkblue";
+                        e.target.style.stroke = "#002f58";
                         e.target.style.strokeWidth = 4;
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "blue";
+                        e.target.style.stroke = "#002f58";
                         e.target.style.strokeWidth = 2;
                       }
                     }}

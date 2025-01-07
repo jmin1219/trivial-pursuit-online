@@ -25,6 +25,7 @@ export default function Home() {
     setGameId(null);
     setIsModalOpen(true);
   };
+
   const handleJoinGame = (gameId) => {
     if (localStorage.getItem("player-data")) {
       alert(
@@ -39,6 +40,7 @@ export default function Home() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const handleSubmitNewPlayer = async ({ playerName, playerColor }) => {
     const playerData = { name: playerName, color: playerColor, gameId };
     if (mode === "create") {
@@ -52,7 +54,8 @@ export default function Home() {
       } catch (error) {
         console.error(`Error creating game (Home.jsx): ${error}`);
       }
-    } else if (mode === "join") {
+    }
+    if (mode === "join") {
       try {
         localStorage.setItem(
           "player-data",
@@ -66,6 +69,7 @@ export default function Home() {
     }
     setIsModalOpen(false);
   };
+  
   const handleEnterGame = (gameId) => {
     navigate(`/${gameId}`);
   };

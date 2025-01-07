@@ -44,7 +44,8 @@ export default function NewPlayerModal({ mode, gameId, onCancel, onSubmit }) {
       }
     };
     fetchColorsAndNames();
-  }, [mode, gameId]);
+    console.log(availableColors, existingPlayerNames);
+  }, [mode, gameId, availableColors, existingPlayerNames]);
 
   const handleSubmit = () => {
     if (!playerName || !playerColor) {

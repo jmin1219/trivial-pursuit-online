@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const apiGames = axios.create({
-  baseURL: "https://trivial-pursuit-online-backend.onrender.com/api/games",
+  baseURL: "https://trivial-pursuit-online.onrender.com/api/games",
 });
 
 export const apiFetchGameData = async (gameId) => {
