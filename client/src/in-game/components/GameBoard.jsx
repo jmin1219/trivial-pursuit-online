@@ -560,7 +560,8 @@ export default function GameBoard() {
               return (
                 <Button
                   key={color}
-                  className={`m-2 bg-[${COLORS[color].hex}]`}
+                  className={`m-2`}
+                  style={{ backgroundColor: COLORS[color].hex }}
                   onClick={() => {
                     setOpenColorPicker(false);
                     getCHQuestion(gameState.gameId, color);
