@@ -123,16 +123,6 @@ export default function GameBoard() {
                           : "default",
                     }}
                     onClick={() => handleSpaceClick(`O${index}`)}
-                    onMouseEnter={(e) => {
-                      if (isAvailable) {
-                        e.target.style.strokeWidth = "2";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (isAvailable) {
-                        e.target.style.strokeWidth = "2";
-                      }
-                    }}
                   />
                 </g>
                 {gameState.players
@@ -202,16 +192,6 @@ export default function GameBoard() {
                           : 0.3
                         : 1,
                       cursor: isAvailable ? "pointer" : "default",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (isAvailable) {
-                        e.target.style.strokeWidth = "2";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (isAvailable) {
-                        e.target.style.strokeWidth = "2";
-                      }
                     }}
                   />
                   <text
@@ -368,16 +348,6 @@ export default function GameBoard() {
                   cursor: isAvailable ? "pointer" : "default",
                 }}
                 onClick={() => handleSpaceClick("CH")}
-                onMouseEnter={(e) => {
-                  if (isAvailable) {
-                    e.target.style.strokeWidth = "4";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (isAvailable) {
-                    e.target.style.strokeWidth = "2";
-                  }
-                }}
               />
               <image
                 href={centralHubLogo}
