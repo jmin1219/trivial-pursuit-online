@@ -41,7 +41,6 @@ export default function GameBoard() {
       setReachableSpaces(gameState.reachableSpaces);
     }
   }, [gameState]);
-  console.log("Reachable Spaces:", reachableSpaces);
 
   const handleSpaceClick = (spaceId) => {
     if (!reachableSpaces.includes(spaceId)) {
@@ -62,13 +61,14 @@ export default function GameBoard() {
         getFinalQuestionCategory(gameState.gameId);
       }
     } else {
-      setReachableSpaces([]);
-      document.querySelectorAll("polygon", "rect").forEach((polygon) => {
-        polygon.style.stroke = "white";
-        polygon.style.strokeWidth = 1;
-      });
       movePlayer(gameState.gameId, spaceId);
     }
+    setReachableSpaces([]);
+    document.querySelectorAll("rect", "polygon").forEach((element) => {
+      if (element.id === spaceId) {
+        element.style.strokeWidth = "2";
+      }
+    });
   };
 
   const getColorClass = (spaceId) => {
@@ -125,14 +125,12 @@ export default function GameBoard() {
                     onClick={() => handleSpaceClick(`O${index}`)}
                     onMouseEnter={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "#002f58";
-                        e.target.style.strokeWidth = 4;
+                        e.target.style.strokeWidth = "2";
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "#002f58";
-                        e.target.style.strokeWidth = 2;
+                        e.target.style.strokeWidth = "2";
                       }
                     }}
                   />
@@ -207,14 +205,12 @@ export default function GameBoard() {
                     }}
                     onMouseEnter={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "#002f58";
-                        e.target.style.strokeWidth = 4;
+                        e.target.style.strokeWidth = "2";
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "#002f58";
-                        e.target.style.strokeWidth = 2;
+                        e.target.style.strokeWidth = "2";
                       }
                     }}
                   />
@@ -303,14 +299,12 @@ export default function GameBoard() {
                   onClick={() => handleSpaceClick(`W${index}`)}
                   onMouseEnter={(e) => {
                     if (isAvailable) {
-                      e.target.style.stroke = "#002f58";
-                      e.target.style.strokeWidth = 4;
+                      e.target.style.strokeWidth = "4";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (isAvailable) {
-                      e.target.style.stroke = "#002f58";
-                      e.target.style.strokeWidth = 2;
+                      e.target.style.strokeWidth = "2";
                     }
                   }}
                 />
@@ -367,7 +361,7 @@ export default function GameBoard() {
               <polygon
                 points={hexagonPoints(150, 150, 35)}
                 fill="#002f58"
-                stroke={isAvailable ? "blue" : "white"}
+                stroke={isAvailable ? "lightblue" : "white"}
                 strokeWidth={isAvailable ? 2 : 1}
                 style={{
                   opacity: gameState.isStarted ? (isAvailable ? 1 : 0.3) : 1,
@@ -376,14 +370,12 @@ export default function GameBoard() {
                 onClick={() => handleSpaceClick("CH")}
                 onMouseEnter={(e) => {
                   if (isAvailable) {
-                    e.target.style.stroke = "lightblue";
-                    e.target.style.strokeWidth = 4;
+                    e.target.style.strokeWidth = "4";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (isAvailable) {
-                    e.target.style.stroke = "lightblue";
-                    e.target.style.strokeWidth = 2;
+                    e.target.style.strokeWidth = "2";
                   }
                 }}
               />
@@ -483,14 +475,12 @@ export default function GameBoard() {
                     onClick={() => handleSpaceClick(`S${index}-${squareIndex}`)}
                     onMouseEnter={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "#002f58";
-                        e.target.style.strokeWidth = 4;
+                        e.target.style.strokeWidth = "4";
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (isAvailable) {
-                        e.target.style.stroke = "#002f58";
-                        e.target.style.strokeWidth = 2;
+                        e.target.style.strokeWidth = "2";
                       }
                     }}
                   />
