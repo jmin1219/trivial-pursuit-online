@@ -277,16 +277,6 @@ export default function GameBoard() {
                     cursor: isAvailable ? "pointer" : "default",
                   }}
                   onClick={() => handleSpaceClick(`W${index}`)}
-                  onMouseEnter={(e) => {
-                    if (isAvailable) {
-                      e.target.style.strokeWidth = "4";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (isAvailable) {
-                      e.target.style.strokeWidth = "2";
-                    }
-                  }}
                 />
               </g>
 
