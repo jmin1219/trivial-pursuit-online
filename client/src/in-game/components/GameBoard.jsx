@@ -327,7 +327,7 @@ export default function GameBoard() {
         {(() => {
           const isAvailable = reachableSpaces.includes("CH");
           return (
-            <g id="CH">
+            <g id="CH" onClick={() => handleSpaceClick("CH")}>
               <polygon
                 points={hexagonPoints(150, 150, 35)}
                 fill="#002f58"
@@ -337,7 +337,6 @@ export default function GameBoard() {
                   opacity: gameState.isStarted ? (isAvailable ? 1 : 0.3) : 1,
                   cursor: isAvailable ? "pointer" : "default",
                 }}
-                onClick={() => handleSpaceClick("CH")}
               />
               <image
                 href={centralHubLogo}
