@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { useChatContext } from "@/context/ChatContext";
 import { useGameContext } from "@/context/GameContext";
 import { useState } from "react";
@@ -18,7 +17,7 @@ export default function ChatBox() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && message.trim() !== "") {
       handleSendMessage();
     }
   };
@@ -37,43 +36,39 @@ export default function ChatBox() {
             .map((msg, index) => (
               <div
                 key={index}
-                className={`w-full text-sm border border-slate-500 rounded-sm mb-1 p-1 ${
-                  msg.sender === playerData.name ? "text-right" : "text-left"
-                }`}
+                className={`inline-block h-auto text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px] border border-slate-500 rounded-md mb-1 p-1 px-2 ${
+                  msg.sender === playerData.name
+                    ? "text-right self-end"
+                    : "text-left self-start"
+                } leading-relaxed sm:leading-tight`}
               >
                 {msg.sender === "server" ? (
-                  <span className="italic font-bold text-gray-400">
+                  <p className="italic font-bold text-gray-400 text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px]">
                     {msg.message}
-                  </span>
+                  </p>
                 ) : (
                   <>
                     {msg.sender !== playerData.name && (
-                      <span className="font-bold">{msg.sender}:</span>
-                    )}{" "}
+                      <p className="font-bold text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px]">
+                        {msg.sender}:
+                      </p>
+                    )}
                     {msg.message}
                   </>
                 )}
               </div>
             ))}
       </div>
-      <div className="flex gap-1 mt-auto">
+      <div className="flex gap-1 mt-auto justify-center items-center">
         {/* MESSAGE INPUT FIELD */}
         <input
           type="text"
           placeholder="Enter message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 p-2 rounded-lg bg-gray-600 text-white border border-white"
+          className="flex-1 p-2 w-full h-[90%] rounded-lg bg-gray-600 text-white border border-white text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px]"
           onKeyDown={handleKeyDown}
         />
-        {/* SEND BUTTON */}
-        <Button
-          variant="outline"
-          className="text-black "
-          onClick={handleSendMessage}
-        >
-          Send
-        </Button>
       </div>
     </div>
   );

@@ -33,23 +33,25 @@ export default function Dice() {
 
   return (
     <div className="flex flex-col bg-gray-700 text-white rounded-lg relative h-full w-full p-1">
-      <div className="w-full h-full flex flex-col rounded-lg border overflow-hidden p-1">
+      <div className="w-full h-full flex flex-col justify-center items-center rounded-lg border overflow-hidden p-1">
         {/* DICE IMAGE */}
         <div
-          className="flex justify-center items-center h-3/4 pt-2 cursor-pointer"
+          className="flex h-2/3 justify-center items-center cursor-pointer"
           onClick={handleRollDice}
         >
           <img
             src={diceImages[diceState.diceValue - 1]}
             alt={`dice-${diceState.diceValue}`}
-            className={`object-contain h-full w-full max-h-24 ${
+            className={`object-contain max-h-24 m-2 lg:w-[100%] lg:h-[100%] md:w-[75%] md:h-[75%] sm:w-[70%] sm:h-[70%] w-[60%] h-[60%] ${
               diceState.isShuffling && "animate-spin"
             }`}
           />
         </div>
         {/* DICE MESSAGE PROMPT */}
-        <div className="flex justify-center items-center h-1/4">
-          <p className="font-bold">{diceState.dicePrompt}</p>
+        <div className="flex justify-center items-center h-1/3 w-full">
+          <p className="font-bold text-xs sm:text-sm md:text-md lg:text-lg">
+            {diceState.dicePrompt}
+          </p>
         </div>
       </div>
     </div>
