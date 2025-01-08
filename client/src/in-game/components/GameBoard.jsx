@@ -433,16 +433,6 @@ export default function GameBoard() {
                       cursor: isAvailable ? "pointer" : "default",
                     }}
                     onClick={() => handleSpaceClick(`S${index}-${squareIndex}`)}
-                    onMouseEnter={(e) => {
-                      if (isAvailable) {
-                        e.target.style.strokeWidth = "4";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (isAvailable) {
-                        e.target.style.strokeWidth = "2";
-                      }
-                    }}
                   />
                   {gameState.players
                     .filter(
