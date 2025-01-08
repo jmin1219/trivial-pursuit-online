@@ -36,11 +36,11 @@ export default function ChatBox() {
             .map((msg, index) => (
               <div
                 key={index}
-                className={`inline-block h-auto text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px] border border-slate-500 rounded-md mb-1 p-1 px-2 ${
+                className={`inline-block text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px] border border-slate-500 rounded-md mb-1 p-1 sm:p-1 sm:px-2 ${
                   msg.sender === playerData.name
                     ? "text-right self-end"
                     : "text-left self-start"
-                } leading-relaxed sm:leading-tight`}
+                } leading-tight`}
               >
                 {msg.sender === "server" ? (
                   <p className="italic font-bold text-gray-400 text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px]">

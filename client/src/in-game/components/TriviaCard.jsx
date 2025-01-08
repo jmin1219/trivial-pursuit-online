@@ -58,7 +58,7 @@ export default function TriviaCard() {
               </div>
             ) : (
               <div className="leading-relaxed sm:leading-tight">
-                <p className="italic text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px] ">
+                <p className="italic text-[10px] sm:text-[10px] md:text-[12px] lg:text-[14px] ">
                   It&apos;s {currentTurnPlayer.name}&apos;s turn!
                 </p>
                 <p className="italic text-[8px] sm:text-[8px] md:text-[8px] lg:text-[14px] ">
@@ -74,14 +74,18 @@ export default function TriviaCard() {
           </p>
           {currentTurnPlayer.name !== playerData.name ? (
             showAnswer ? (
-              <div className="flex flex-col items-center mt-4">
-                <p className="text-md mb-2">Correct Answer:</p>
-                <p className="text-lg">{currentQuestion.answer}</p>
+              <div className="flex flex-col items-center mt-3">
+                <p className=" text-[12px] sm:text-[14px] md:text-[18px]">
+                  Correct Answer:
+                </p>
+                <p className="text-[12px] sm:text-[14px] md:text-[18px] font-semibold">
+                  {currentQuestion.answer}
+                </p>
               </div>
             ) : (
               <Button
                 onClick={() => setShowAnswer(true)}
-                className="text-[8px] sm:text-[10px] p-1 h-4 sm:p-3 items-center flex justify-center"
+                className="text-[8px] sm:text-[10px] p-2 h-4 sm:p-3 items-center flex justify-center"
               >
                 Show Answer
               </Button>
