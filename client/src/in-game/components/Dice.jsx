@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import dice1 from "../../assets/dice/dice1.png";
 import dice2 from "../../assets/dice/dice2.png";
 import dice3 from "../../assets/dice/dice3.png";
@@ -15,14 +16,37 @@ export default function Dice() {
   const handleRollDice = () => {
     if (diceState.isShuffling) return;
     if (isChoosingSpace) {
-      return alert("You already rolled the dice. Please choose a space.");
+      toast.warn("You already rolled the dice. Please choose a space.", {
+        position: "top-right",
+        theme: "colored",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        transition: "bounce",
+      });
+      return;
     } else if (
       gameState.players[gameState.currentTurnIndex].name !== playerData.name
     ) {
-      alert("It's not your turn to roll the dice!");
+      toast.warn("It's not your turn to roll the dice!", {
+        position: "top-right",
+        theme: "colored",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        transition: "bounce",
+      });
       return;
     } else if (gameState.currentQuestion) {
-      return alert("You need to answer the trivia question");
+      toast.warn("You need to answer the trivia question", {
+        position: "top-right",
+        theme: "colored",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        transition: "bounce",
+      });
+      return;
     }
     requestRollDice(gameState, playerData);
   };

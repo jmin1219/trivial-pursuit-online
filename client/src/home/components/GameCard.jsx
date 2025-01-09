@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import PropTypes from "prop-types";
 import { useHomeContext } from "../../context/HomeContext";
+import { toast } from "react-toastify";
 
 export default function GameCard({ game, onJoin, onEnter }) {
   const { socketDeleteGame } = useHomeContext();
@@ -14,7 +15,14 @@ export default function GameCard({ game, onJoin, onEnter }) {
       socketDeleteGame(game.gameId);
       localStorage.removeItem("player-data");
     } else {
-      alert("You can't delete a game you're not in.");
+      toast.error("You can't delete a game you're not in.", {
+        position: "top-right",
+        theme: "colored",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        transition: "bounce",
+      });
     }
   };
 

@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import GameRulesCard from "./GameRulesCard";
 import centralHubLogo from "@/assets/trivial-central-logo.png";
+import { toast } from "react-toastify";
 
 export default function GameBoard() {
   const {
@@ -44,11 +45,27 @@ export default function GameBoard() {
 
   const handleSpaceClick = (spaceId) => {
     if (!reachableSpaces.includes(spaceId)) {
-      return alert("You can't move there.");
+      toast.error("You can't move there.", {
+        position: "top-right",
+        theme: "colored",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        transition: "bounce",
+      });
+      return;
     } else if (
       gameState.players[gameState.currentTurnIndex].name !== playerData.name
     ) {
-      return alert("It's not your turn to move.");
+      toast.error("It's not your turn to move.", {
+        position: "top-right",
+        theme: "colored",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        transition: "bounce",
+      });
+      return;
     } else if (spaceId === "CH") {
       if (gameState.players[gameState.currentTurnIndex].wedges.length !== 6) {
         {
@@ -487,7 +504,7 @@ export default function GameBoard() {
 
       {/* COLOR PICKER MODAL */}
       {openColorPicker && (
-        <Card className="absolute w-3/4 flex flex-col justify-center items-center border-8 border-gray-700">
+        <Card className="absolute w-3/4 flex flex-col justify-center items-center border-8 border-gray-700 overflow-auto">
           <CardHeader>
             <CardTitle>Choose a Category</CardTitle>
             <CardDescription>{categoryPickerPrompt}</CardDescription>

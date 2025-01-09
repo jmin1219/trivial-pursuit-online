@@ -5,6 +5,7 @@ import { useHomeContext } from "../context/HomeContext";
 import "./Home.css";
 import GameCard from "./components/GameCard";
 import NewPlayerModal from "./components/NewPlayerModal";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const { games, socketCreateGame, socketJoinGame } = useHomeContext();
@@ -16,8 +17,16 @@ export default function Home() {
 
   const handleCreateGame = () => {
     if (localStorage.getItem("player-data")) {
-      alert(
-        "You are already in a game. Please leave the current game to join another one."
+      toast.error(
+        "You are already in a game. Please leave the current game to join another one.",
+        {
+          position: "top-right",
+          theme: "colored",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          transition: "bounce",
+        }
       );
       return;
     }
@@ -28,8 +37,16 @@ export default function Home() {
 
   const handleJoinGame = (gameId) => {
     if (localStorage.getItem("player-data")) {
-      alert(
-        "You are already in a game. Please leave the current game to join another one."
+      toast.error(
+        "You are already in a game. Please leave the current game to join another one.",
+        {
+          position: "top-right",
+          theme: "colored",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          transition: "bounce",
+        }
       );
       return;
     }
@@ -69,7 +86,7 @@ export default function Home() {
     }
     setIsModalOpen(false);
   };
-  
+
   const handleEnterGame = (gameId) => {
     navigate(`/${gameId}`);
   };

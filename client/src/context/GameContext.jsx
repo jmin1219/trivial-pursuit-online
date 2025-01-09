@@ -2,6 +2,7 @@ import propTypes from "prop-types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import clientSocket from "../services/socket.js";
+import { toast } from "react-toastify";
 
 const GameContext = createContext();
 
@@ -63,9 +64,20 @@ export const GameProvider = ({ children }) => {
       clientSocket.emit("request-final-question", { gameId, category });
     });
     clientSocket.on("game-won", (message) => {
-      alert(message);
-      localStorage.removeItem("player-data");
-      navigate("/");
+      toast.success(message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+        transition: "bounce",
+      });
+      setTimeout(() => {
+        localStorage.removeItem("player-data");
+        navigate("/");
+      }, 3100);
     });
     clientSocket.on("select-final-question-category", () => {
       setCategoryPickerPrompt("Select a category for the final question.");

@@ -4,6 +4,7 @@ import ChatBox from "./components/ChatBox";
 import Dice from "./components/Dice";
 import GameBoard from "./components/GameBoard";
 import Scoreboard from "./components/Scoreboard";
+import { toast } from "react-toastify";
 
 export default function GameLobby() {
   const { gameState, startGame } = useGameContext();
@@ -11,7 +12,14 @@ export default function GameLobby() {
 
   const handleStartGame = () => {
     if (gameState.players.length < 2) {
-      alert("You need at least 2 players to start the game.");
+      toast.warn("You need at least 2 players to start the game.", {
+        position: "top-right",
+        theme: "dark",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        transition: "bounce",
+      });
       return;
     }
     startGame(gameState);

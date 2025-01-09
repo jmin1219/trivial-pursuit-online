@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <Header />
-      <main>
+      <main >
         <BrowserRouter>
           <HomeProvider>
             <Routes>
