@@ -72,7 +72,6 @@ export const GameProvider = ({ children }) => {
         pauseOnHover: false,
         draggable: false,
         theme: "colored",
-        transition: "bounce",
       });
       setTimeout(() => {
         localStorage.removeItem("player-data");

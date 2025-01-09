@@ -51,7 +51,6 @@ export default function GameBoard() {
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
-        transition: "bounce",
       });
       return;
     } else if (
@@ -63,7 +62,6 @@ export default function GameBoard() {
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
-        transition: "bounce",
       });
       return;
     } else if (spaceId === "CH") {

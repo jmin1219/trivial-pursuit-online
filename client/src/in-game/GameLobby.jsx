@@ -4,7 +4,7 @@ import ChatBox from "./components/ChatBox";
 import Dice from "./components/Dice";
 import GameBoard from "./components/GameBoard";
 import Scoreboard from "./components/Scoreboard";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function GameLobby() {
   const { gameState, startGame } = useGameContext();
@@ -18,7 +18,6 @@ export default function GameLobby() {
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
-        transition: "bounce",
       });
       return;
     }
@@ -62,6 +61,7 @@ export default function GameLobby() {
           <ChatBox />
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

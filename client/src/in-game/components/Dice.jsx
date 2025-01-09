@@ -22,7 +22,6 @@ export default function Dice() {
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
-        transition: "bounce",
       });
       return;
     } else if (
@@ -34,7 +33,6 @@ export default function Dice() {
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
-        transition: "bounce",
       });
       return;
     } else if (gameState.currentQuestion) {
@@ -44,7 +42,6 @@ export default function Dice() {
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
-        transition: "bounce",
       });
       return;
     }

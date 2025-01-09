@@ -21,7 +21,6 @@ export default function GameCard({ game, onJoin, onEnter }) {
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
-        transition: "bounce",
       });
     }
   };

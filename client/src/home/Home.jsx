@@ -5,7 +5,7 @@ import { useHomeContext } from "../context/HomeContext";
 import "./Home.css";
 import GameCard from "./components/GameCard";
 import NewPlayerModal from "./components/NewPlayerModal";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Home() {
   const { games, socketCreateGame, socketJoinGame } = useHomeContext();
@@ -25,7 +25,6 @@ export default function Home() {
           autoClose: 3000,
           hideProgressBar: true,
           closeOnClick: true,
-          transition: "bounce",
         }
       );
       return;
@@ -45,7 +44,6 @@ export default function Home() {
           autoClose: 3000,
           hideProgressBar: true,
           closeOnClick: true,
-          transition: "bounce",
         }
       );
       return;
@@ -128,6 +126,7 @@ export default function Home() {
           onSubmit={handleSubmitNewPlayer}
         />
       )}
+      <ToastContainer />
     </div>
   );
 }
