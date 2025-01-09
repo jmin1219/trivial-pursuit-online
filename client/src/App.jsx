@@ -9,9 +9,9 @@ import { ChatProvider } from "./context/ChatContext";
 
 function App() {
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <Header />
-      <main >
+      <main className="flex-1 overflow-auto">
         <BrowserRouter>
           <HomeProvider>
             <Routes>
@@ -30,7 +30,7 @@ function App() {
           </HomeProvider>
         </BrowserRouter>
       </main>
-    </>
+    </div>
   );
 }
 
