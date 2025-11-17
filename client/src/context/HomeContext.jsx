@@ -75,42 +75,28 @@ export const HomeProvider = ({ children }) => {
   };
 
   const socketCreateGame = (playerData) => {
+    console.log("🔵 socketCreateGame called with:", playerData);
+
     return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        console.error("❌ Socket timeout after 10 seconds");
+        reject(new Error("Request timed out - server not responding"));
+      }, 10000);
+
       clientSocket.emit("create-game", playerData, (response) => {
+        clearTimeout(timeout);
+        console.log("🔵 Server response:", response);
+
         if (response.error) {
-          reject(response.error);
+          console.error("❌ Server returned error:", response.error);
+          reject(new Error(response.error));
         } else {
+          console.log("✅ Game created successfully:", response);
           resolve(response);
         }
       });
     });
   };
-
-  const socketJoinGame = (gameId, playerData) => {
-    clientSocket.emit("join-game", { gameId, playerData });
-  };
-
-  const socketDeleteGame = (gameId) => {
-    clientSocket.emit("delete-game", gameId);
-  };
-
-  const socketLeaveGame = (gameId, playerData) => {
-    clientSocket.emit("leave-game", { playerData });
-  };
-
-  return (
-    <HomeContext.Provider
-      value={{
-        games,
-        socketCreateGame,
-        socketJoinGame,
-        socketDeleteGame,
-        socketLeaveGame,
-      }}
-    >
-      {children}
-    </HomeContext.Provider>
-  );
 };
 
 HomeProvider.propTypes = {

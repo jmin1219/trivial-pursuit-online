@@ -57,10 +57,20 @@ export default function Home() {
   };
 
   const handleSubmitNewPlayer = async ({ playerName, playerColor }) => {
+    console.log("🔵 Submit clicked:", {
+      playerName,
+      playerColor,
+      mode,
+      gameId,
+    });
+
     const playerData = { name: playerName, color: playerColor, gameId };
     if (mode === "create") {
       try {
+        console.log("🔵 Calling socketCreateGame with:", playerData);
         const game = await socketCreateGame(playerData);
+        console.log("✅ Game created:", game);
+
         localStorage.setItem(
           "player-data",
           JSON.stringify({ ...playerData, gameId: game.gameId })
@@ -68,6 +78,7 @@ export default function Home() {
         navigate(`/${game.gameId}`);
       } catch (error) {
         console.error(`Error creating game (Home.jsx): ${error}`);
+        alert(`Failed to create game: ${error.message}`); // Show user the error
       }
     }
     if (mode === "join") {

@@ -10,6 +10,7 @@ export const gameSocketHandlers = (socket, io) => {
       cb(game);
     } catch (error) {
       console.error(`Error creating game (gameSocketHandlers.js): ${error}`);
+      cb({ error: error.message });
     }
   });
 
