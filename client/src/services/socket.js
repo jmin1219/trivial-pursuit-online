@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const clientSocket = io("https://trivial-pursuit-online.onrender.com", {
+const clientSocket = io("http://localhost:5001", {
   transports: ["websocket", "polling"],
 });
 
