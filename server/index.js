@@ -51,6 +51,8 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-httpServer.listen(process.env.SERVER_PORT, () => {
-  console.log(`Server is running on port ${process.env.SERVER_PORT}.`);
+const PORT = process.env.PORT || process.env.SERVER_PORT || 5001;
+
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });
